@@ -1,8 +1,8 @@
 const themeConfig = {
   github: "https://github.com/calcom/cal.com",
   docsRepositoryBase: "https://github.com/calcom/cal.com/blob/main/apps/docs/pages",
-  titleSuffix: " | Cal.com",
-  logo: <h4 className="m-0">Cal.com</h4>,
+  titleSuffix: " | Dbee Cal",
+  logo: <h4 className="m-0">Dbee Cal</h4>,
   head: (
     <>
       <meta name="msapplication-TileColor" content="#ffffff" />
@@ -39,7 +39,7 @@ const themeConfig = {
   nextLinks: true,
   footer: true,
   footerEditLink: "Edit this page on GitHub",
-  footerText: <>© {new Date().getFullYear()} Cal.com, Inc. All rights reserved.</>,
+  footerText: <>© {new Date().getFullYear()} Dbee Data, Inc. All rights reserved.</>,
 };
 
 export default themeConfig;

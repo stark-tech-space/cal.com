@@ -90,6 +90,12 @@ const nextConfig = {
   async redirects() {
     const redirects = [
       {
+        source: "/signup",
+        destination: "https://dbeecalsignup.paperform.com",
+        permanent: false,
+        basePath: false
+      },
+      {
         source: "/settings",
         destination: "/settings/profile",
         permanent: true,
