@@ -25,6 +25,7 @@ images:
 steps:
   # Docker Build
   - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
     env:
       [
         'API_KEY_PREFIX=$_API_KEY_PREFIX',
@@ -51,6 +52,7 @@ steps:
       ]
     args:
       [
+        '-c',
         'build',
         '-t',
         'asia-northeast1-docker.pkg.dev/${PROJECT_ID}/stark-tech/${REPO_NAME}/${BRANCH_NAME}/${COMMIT_SHA}',
@@ -64,15 +66,15 @@ steps:
         '--build-arg', 'NEXT_PUBLIC_WEBSITE_URL=$_NEXT_PUBLIC_WEBSITE_URL',
         '--build-arg', 'NEXTAUTH_COOKIE_DOMAIN=$_NEXTAUTH_COOKIE_DOMAIN',
         '--build-arg', 'NEXTAUTH_URL=$_NEXTAUTH_URL',
-        '--build-arg', 'NEXTAUTH_SECRET=${NEXTAUTH_SECRET}',
-        '--build-arg', 'CALENDSO_ENCRYPTION_KEY=${CALENDSO_ENCRYPTION_KEY}',
-        '--build-arg', 'DATABASE_URL=${DATABASE_URL}',
-        '--build-arg', 'EMAIL_SERVER_PASSWORD=${EMAIL_SERVER_PASSWORD}',
-        '--build-arg', 'EMAIL_SERVER_USER=${EMAIL_SERVER_USER}',
-        '--build-arg', 'GOOGLE_API_CREDENTIALS=${GOOGLE_API_CREDENTIALS}',
-        '--build-arg', 'CRON_API_KEY=${CRON_API_KEY}',
-        '--build-arg', 'ZOOM_CLIENT_ID=${ZOOM_CLIENT_ID}',
-        '--build-arg', 'ZOOM_CLIENT_SECRET=${ZOOM_CLIENT_SECRET}',
+        '--build-arg', 'NEXTAUTH_SECRET=$$NEXTAUTH_SECRET',
+        '--build-arg', 'CALENDSO_ENCRYPTION_KEY=$$CALENDSO_ENCRYPTION_KEY',
+        '--build-arg', 'DATABASE_URL=$$DATABASE_URL',
+        '--build-arg', 'EMAIL_SERVER_PASSWORD=$$EMAIL_SERVER_PASSWORD',
+        '--build-arg', 'EMAIL_SERVER_USER=$$EMAIL_SERVER_USER',
+        '--build-arg', 'GOOGLE_API_CREDENTIALS=$$GOOGLE_API_CREDENTIALS',
+        '--build-arg', 'CRON_API_KEY=$$CRON_API_KEY',
+        '--build-arg', 'ZOOM_CLIENT_ID=$$ZOOM_CLIENT_ID',
+        '--build-arg', 'ZOOM_CLIENT_SECRET=$$ZOOM_CLIENT_SECRET',
         '--build-arg', 'NEXT_PUBLIC_LICENSE_CONSENT=agree',
         '--network=host',
       ]
