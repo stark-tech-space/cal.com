@@ -45,6 +45,8 @@ COPY ./package.json ./yarn.lock ./turbo.json ./
 COPY ./apps/web ./apps/web
 COPY ./packages ./packages
 
+RUN printenv
+
 RUN yarn install --frozen-lockfile
 
 RUN yarn build
@@ -56,8 +58,7 @@ ENV NODE_ENV production
 
 RUN apt-get update && \
     apt-get -y install netcat && \
-    rm -rf /var/lib/apt/lists/* && \
-    npm install --global prisma
+    rm -rf /var/lib/apt/lists/*
 
 COPY ./package.json ./yarn.lock ./turbo.json ./
 COPY --from=builder /calcom/node_modules ./node_modules
