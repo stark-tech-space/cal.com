@@ -3,17 +3,19 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
     args: [
-      # '-c',
-      # 'echo $$DOCKER_COMPOSE_ENV >> .env',
       '-c',
-      'docker compose up --detach database',
-      '-c',
-      'docker compose build calcom'
+      'echo $$DOCKER_COMPOSE_ENV >> .env && docker compose up --detach database && docker compose build calcom'
     ]
     secretEnv:
       [
         'DOCKER_COMPOSE_ENV'
       ]
+      
+  # Retag the old image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['tag',
+    'calcom:latest',
+    'asia-northeast1-docker.pkg.dev/${PROJECT_ID}/stark-tech/${REPO_NAME}/${BRANCH_NAME}/${COMMIT_SHA}']
 
   # Docker Push
   - name: 'gcr.io/cloud-builders/docker'
