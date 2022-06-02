@@ -2,10 +2,10 @@ steps:
   # Docker Build
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
-    args: 
+    args:
       - '-c'
       - |
-        docker build -t asia-northeast1-docker.pkg.dev/${PROJECT_ID}/stark-tech/${REPO_NAME}/${BRANCH_NAME}/${COMMIT_SHA} . --build-arg API_KEY_PREFIX=$(cat _API_KEY_PREFIX \ 
+        docker build -t asia-northeast1-docker.pkg.dev/${PROJECT_ID}/stark-tech/${REPO_NAME}/${BRANCH_NAME}/${COMMIT_SHA} . --build-arg API_KEY_PREFIX=$(cat _API_KEY_PREFIX \
       -  --build-arg EMAIL_FROM= $(cat _EMAIL_FROM) \
       -  --build-arg EMAIL_SERVER_HOST= $(cat _EMAIL_SERVER_HOST) \
       -  --build-arg EMAIL_SERVER_PORT= $(cat _EMAIL_SERVER_PORT) \
