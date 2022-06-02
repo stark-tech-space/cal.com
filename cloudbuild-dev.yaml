@@ -53,6 +53,7 @@ steps:
     args:
       [
         '-c',
+        'docker',
         'build',
         '-t',
         'asia-northeast1-docker.pkg.dev/${PROJECT_ID}/stark-tech/${REPO_NAME}/${BRANCH_NAME}/${COMMIT_SHA}',
