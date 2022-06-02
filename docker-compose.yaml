@@ -6,7 +6,6 @@ volumes:
 
 networks:
   stack:
-    name: stack
     external: false
 
 services:
