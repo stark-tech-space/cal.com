@@ -1,27 +1,3 @@
-availableSecrets:
-  secretManager:
-    - versionName: projects/${PROJECT_NUMBER}/secrets/CALENDSO_ENCRYPTION_KEY/versions/latest
-      env: CALENDSO_ENCRYPTION_KEY
-    - versionName: projects/${PROJECT_NUMBER}/secrets/DATABASE_URL/versions/latest
-      env: DATABASE_URL
-    - versionName: projects/${PROJECT_NUMBER}/secrets/EMAIL_SERVER_PASSWORD/versions/latest
-      env: EMAIL_SERVER_PASSWORD
-    - versionName: projects/${PROJECT_NUMBER}/secrets/EMAIL_SERVER_USER/versions/latest
-      env: EMAIL_SERVER_USER
-    - versionName: projects/${PROJECT_NUMBER}/secrets/GOOGLE_API_CREDENTIALS/versions/latest
-      env: GOOGLE_API_CREDENTIALS
-    - versionName: projects/${PROJECT_NUMBER}/secrets/NEXTAUTH_SECRET/versions/latest
-      env: NEXTAUTH_SECRET
-    - versionName: projects/${PROJECT_NUMBER}/secrets/CRON_API_KEY/versions/latest
-      env: CRON_API_KEY
-    - versionName: projects/${PROJECT_NUMBER}/secrets/ZOOM_CLIENT_ID/versions/latest
-      env: ZOOM_CLIENT_ID
-    - versionName: projects/${PROJECT_NUMBER}/secrets/ZOOM_CLIENT_SECRET/versions/latest
-      env: ZOOM_CLIENT_SECRET
-
-images:
-  - asia-northeast1-docker.pkg.dev/${PROJECT_ID}/stark-tech/${REPO_NAME}/${BRANCH_NAME}/${COMMIT_SHA}
-
 steps:
   # Docker Build
   - name: 'gcr.io/cloud-builders/docker'
@@ -103,3 +79,27 @@ steps:
         '--port',
         '3000'
       ]
+
+availableSecrets:
+  secretManager:
+    - versionName: projects/${PROJECT_NUMBER}/secrets/CALENDSO_ENCRYPTION_KEY/versions/latest
+      env: CALENDSO_ENCRYPTION_KEY
+    - versionName: projects/${PROJECT_NUMBER}/secrets/DATABASE_URL/versions/latest
+      env: DATABASE_URL
+    - versionName: projects/${PROJECT_NUMBER}/secrets/EMAIL_SERVER_PASSWORD/versions/latest
+      env: EMAIL_SERVER_PASSWORD
+    - versionName: projects/${PROJECT_NUMBER}/secrets/EMAIL_SERVER_USER/versions/latest
+      env: EMAIL_SERVER_USER
+    - versionName: projects/${PROJECT_NUMBER}/secrets/GOOGLE_API_CREDENTIALS/versions/latest
+      env: GOOGLE_API_CREDENTIALS
+    - versionName: projects/${PROJECT_NUMBER}/secrets/NEXTAUTH_SECRET/versions/latest
+      env: NEXTAUTH_SECRET
+    - versionName: projects/${PROJECT_NUMBER}/secrets/CRON_API_KEY/versions/latest
+      env: CRON_API_KEY
+    - versionName: projects/${PROJECT_NUMBER}/secrets/ZOOM_CLIENT_ID/versions/latest
+      env: ZOOM_CLIENT_ID
+    - versionName: projects/${PROJECT_NUMBER}/secrets/ZOOM_CLIENT_SECRET/versions/latest
+      env: ZOOM_CLIENT_SECRET
+
+images:
+  - asia-northeast1-docker.pkg.dev/${PROJECT_ID}/stark-tech/${REPO_NAME}/${BRANCH_NAME}/${COMMIT_SHA}
