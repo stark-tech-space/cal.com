@@ -23,7 +23,6 @@
     "@calcom/web#build": {
       "dependsOn": [
         "^build",
-        "@calcom/prisma#build",
         "$CALENDSO_ENCRYPTION_KEY",
         "$CRON_API_KEY",
         "$DAILY_API_KEY",
