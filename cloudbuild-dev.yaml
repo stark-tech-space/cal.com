@@ -6,7 +6,7 @@ steps:
       # '-c',
       # 'echo $$DOCKER_COMPOSE_ENV >> .env',
       '-c',
-      'docker compose up -d database',
+      'docker compose up --detach database',
       '-c',
       'docker compose build calcom'
     ]
