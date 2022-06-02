@@ -55,7 +55,7 @@ steps:
         '--port',
         '3000'
       ]
-
+timeout: 1200s
 availableSecrets:
   secretManager:
     - versionName: projects/${PROJECT_NUMBER}/secrets/CALENDSO_ENCRYPTION_KEY/versions/latest
