@@ -1,0 +1,97 @@
+steps:
+  # Docker Build
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args: [
+      'touch .env',
+      '-c',
+      'echo $$DOCKER_COMPOSE_ENV >> .env',
+      '-c',
+      'docker compose up -d database',
+      '-c',
+      'docker compose build calcom'
+    ]
+    env:
+      [
+        'API_KEY_PREFIX=$_API_KEY_PREFIX',
+        'EMAIL_FROM=$_EMAIL_FROM',
+        'EMAIL_SERVER_HOST=$_EMAIL_SERVER_HOST',
+        'EMAIL_SERVER_PORT=$_EMAIL_SERVER_PORT',
+        'NEXT_PUBLIC_EMBED_LIB_URL=$_NEXT_PUBLIC_EMBED_LIB_URL',
+        'NEXT_PUBLIC_WEBAPP_URL=$_NEXT_PUBLIC_WEBAPP_URL',
+        'NEXT_PUBLIC_WEBSITE_URL=$_NEXT_PUBLIC_WEBSITE_URL',
+        'NEXTAUTH_COOKIE_DOMAIN=$_NEXTAUTH_COOKIE_DOMAIN',
+        'NEXTAUTH_URL=$_NEXTAUTH_URL',
+      ]
+    secretEnv:
+      [
+        'CALENDSO_ENCRYPTION_KEY',
+        'POSTGRES_USER',
+        'POSTGRES_PASSWORD',
+        'POSTGRES_DB',
+        'EMAIL_SERVER_PASSWORD',
+        'EMAIL_SERVER_USER',
+        'GOOGLE_API_CREDENTIALS',
+        'NEXTAUTH_SECRET',
+        'CRON_API_KEY',
+        'ZOOM_CLIENT_ID',
+        'ZOOM_CLIENT_SECRET',
+        'DOCKER_COMPOSE_ENV'
+      ]
+
+  # Docker Push
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      [
+        'push',
+        'asia-northeast1-docker.pkg.dev/${PROJECT_ID}/stark-tech/${REPO_NAME}/${BRANCH_NAME}/${COMMIT_SHA}',
+      ]
+
+  # deploy to cloud run, timeout and environment variables
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    timeout: 240s
+    args:
+      [
+        'run',
+        'deploy',
+        'dbee-cal',
+        '--image',
+        'asia-northeast1-docker.pkg.dev/${PROJECT_ID}/stark-tech/${REPO_NAME}/${BRANCH_NAME}/${COMMIT_SHA}',
+        '--region',
+        'asia-northeast1',
+        '--port',
+        '3000'
+      ]
+timeout: 1200s
+availableSecrets:
+  secretManager:
+    - versionName: projects/${PROJECT_NUMBER}/secrets/DOCKER_COMPOSE_ENV/versions/latest
+      env: DOCKER_COMPOSE_ENV
+    - versionName: projects/${PROJECT_NUMBER}/secrets/CALENDSO_ENCRYPTION_KEY/versions/latest
+      env: CALENDSO_ENCRYPTION_KEY
+    - versionName: projects/${PROJECT_NUMBER}/secrets/POSTGRES_USER/versions/latest
+      env: POSTGRES_USER
+    - versionName: projects/${PROJECT_NUMBER}/secrets/POSTGRES_PASSWORD/versions/latest
+      env: POSTGRES_PASSWORD
+    - versionName: projects/${PROJECT_NUMBER}/secrets/POSTGRES_DB/versions/latest
+      env: POSTGRES_DB
+    - versionName: projects/${PROJECT_NUMBER}/secrets/EMAIL_SERVER_PASSWORD/versions/latest
+      env: EMAIL_SERVER_PASSWORD
+    - versionName: projects/${PROJECT_NUMBER}/secrets/EMAIL_SERVER_USER/versions/latest
+      env: EMAIL_SERVER_USER
+    - versionName: projects/${PROJECT_NUMBER}/secrets/GOOGLE_API_CREDENTIALS/versions/latest
+      env: GOOGLE_API_CREDENTIALS
+    - versionName: projects/${PROJECT_NUMBER}/secrets/NEXTAUTH_SECRET/versions/latest
+      env: NEXTAUTH_SECRET
+    - versionName: projects/${PROJECT_NUMBER}/secrets/CRON_API_KEY/versions/latest
+      env: CRON_API_KEY
+    - versionName: projects/${PROJECT_NUMBER}/secrets/ZOOM_CLIENT_ID/versions/latest
+      env: ZOOM_CLIENT_ID
+    - versionName: projects/${PROJECT_NUMBER}/secrets/ZOOM_CLIENT_SECRET/versions/latest
+      env: ZOOM_CLIENT_SECRET
+
+images:
+  - asia-northeast1-docker.pkg.dev/${PROJECT_ID}/stark-tech/${REPO_NAME}/${BRANCH_NAME}/${COMMIT_SHA}
+options:
+  machineType: 'E2_HIGHCPU_8'
