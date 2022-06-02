@@ -26,35 +26,10 @@ steps:
   # Docker Build
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
-    env:
-      [
-        'API_KEY_PREFIX=$_API_KEY_PREFIX',
-        'EMAIL_FROM=$_EMAIL_FROM',
-        'EMAIL_SERVER_HOST=$_EMAIL_SERVER_HOST',
-        'EMAIL_SERVER_PORT=$_EMAIL_SERVER_PORT',
-        'NEXT_PUBLIC_EMBED_LIB_URL=$_NEXT_PUBLIC_EMBED_LIB_URL',
-        'NEXT_PUBLIC_WEBAPP_URL=$_NEXT_PUBLIC_WEBAPP_URL',
-        'NEXT_PUBLIC_WEBSITE_URL=$_NEXT_PUBLIC_WEBSITE_URL',
-        'NEXTAUTH_COOKIE_DOMAIN=$_NEXTAUTH_COOKIE_DOMAIN',
-        'NEXTAUTH_URL=$_NEXTAUTH_URL',
-      ]
-    secretEnv:
-      [
-        'CALENDSO_ENCRYPTION_KEY',
-        'DATABASE_URL',
-        'EMAIL_SERVER_PASSWORD',
-        'EMAIL_SERVER_USER',
-        'GOOGLE_API_CREDENTIALS',
-        'NEXTAUTH_SECRET',
-        'CRON_API_KEY',
-        'ZOOM_CLIENT_ID',
-        'ZOOM_CLIENT_SECRET',
-      ]
     args:
       [
         '-c',
-        'docker',
-        'build',
+        'docker build',
         '-t',
         'asia-northeast1-docker.pkg.dev/${PROJECT_ID}/stark-tech/${REPO_NAME}/${BRANCH_NAME}/${COMMIT_SHA}',
         '.',
@@ -78,6 +53,30 @@ steps:
         '--build-arg', 'ZOOM_CLIENT_SECRET=$$ZOOM_CLIENT_SECRET',
         '--build-arg', 'NEXT_PUBLIC_LICENSE_CONSENT=agree',
         '--network=host',
+      ]
+    env:
+      [
+        'API_KEY_PREFIX=$_API_KEY_PREFIX',
+        'EMAIL_FROM=$_EMAIL_FROM',
+        'EMAIL_SERVER_HOST=$_EMAIL_SERVER_HOST',
+        'EMAIL_SERVER_PORT=$_EMAIL_SERVER_PORT',
+        'NEXT_PUBLIC_EMBED_LIB_URL=$_NEXT_PUBLIC_EMBED_LIB_URL',
+        'NEXT_PUBLIC_WEBAPP_URL=$_NEXT_PUBLIC_WEBAPP_URL',
+        'NEXT_PUBLIC_WEBSITE_URL=$_NEXT_PUBLIC_WEBSITE_URL',
+        'NEXTAUTH_COOKIE_DOMAIN=$_NEXTAUTH_COOKIE_DOMAIN',
+        'NEXTAUTH_URL=$_NEXTAUTH_URL',
+      ]
+    secretEnv:
+      [
+        'CALENDSO_ENCRYPTION_KEY',
+        'DATABASE_URL',
+        'EMAIL_SERVER_PASSWORD',
+        'EMAIL_SERVER_USER',
+        'GOOGLE_API_CREDENTIALS',
+        'NEXTAUTH_SECRET',
+        'CRON_API_KEY',
+        'ZOOM_CLIENT_ID',
+        'ZOOM_CLIENT_SECRET',
       ]
 
   # Docker Push
