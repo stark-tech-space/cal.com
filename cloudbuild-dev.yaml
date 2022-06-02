@@ -3,7 +3,6 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
     args: [
-      'touch .env',
       '-c',
       'echo $$DOCKER_COMPOSE_ENV >> .env',
       '-c',
