@@ -10,7 +10,7 @@ services:
     restart: always
     volumes:
       - database-data:/var/lib/postgresql/data/
-    env_file: .env
+    env_file: .env.build
 
   calcom:
     build:
@@ -24,7 +24,7 @@ services:
     restart: always
     ports:
       - 8080:3000
-    env_file: .env
+    env_file: .env.build
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}
     depends_on:

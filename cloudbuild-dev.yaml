@@ -3,13 +3,8 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
     args: [
-      '-c',
-      'touch .env && echo $$POSTGRES_USER >> .env && echo $$POSTGRES_PASSWORD >> .env && echo $$POSTGRES_DB >> .env && echo $$DATABASE_HOST >> .env && docker compose up --detach database && docker compose build calcom'
+      'docker compose up --detach database && docker compose build calcom'
     ]
-    secretEnv:
-      [
-        'DOCKER_COMPOSE_ENV'
-      ]
 
   # Retag the old image
   - name: 'gcr.io/cloud-builders/docker'
@@ -42,10 +37,6 @@ steps:
         '3000'
       ]
 timeout: 1200s
-availableSecrets:
-  secretManager:
-    - versionName: projects/${PROJECT_NUMBER}/secrets/DOCKER_COMPOSE_ENV/versions/latest
-      env: DOCKER_COMPOSE_ENV
 images:
   - asia-northeast1-docker.pkg.dev/${PROJECT_ID}/stark-tech/${REPO_NAME}/${BRANCH_NAME}/${COMMIT_SHA}
 options:
