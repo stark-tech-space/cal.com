@@ -4,7 +4,7 @@ steps:
     entrypoint: 'bash'
     args: [
       '-c',
-      'compose up --detach database && docker compose build calcom'
+      'touch .env && docker compose up --detach database && docker compose build calcom'
     ]
 
   # Retag the old image
