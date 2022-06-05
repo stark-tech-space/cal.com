@@ -4,7 +4,7 @@ steps:
     entrypoint: 'bash'
     args: [
       '-c',
-      'touch .env && echo $$DOCKER_COMPOSE_ENV >> .env && cat .env && docker compose up --detach database && docker compose build calcom'
+      'touch .env && echo $$DOCKER_COMPOSE_ENV >> .env && docker compose up --detach database && docker compose build calcom'
     ]
     secretEnv:
       [
