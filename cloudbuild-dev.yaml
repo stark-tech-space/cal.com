@@ -4,7 +4,7 @@ steps:
     entrypoint: 'bash'
     args: [
       '-c',
-      'docker compose up --detach database && docker compose build calcom'
+      'compose up --detach database && docker compose build calcom'
     ]
 
   # Retag the old image
@@ -33,9 +33,7 @@ steps:
         '--image',
         'asia-northeast1-docker.pkg.dev/${PROJECT_ID}/stark-tech/${REPO_NAME}/${BRANCH_NAME}/${COMMIT_SHA}',
         '--region',
-        'asia-northeast1',
-        '--port',
-        '3000'
+        'asia-northeast1'
       ]
 timeout: 1200s
 images:
