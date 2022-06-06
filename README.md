@@ -268,7 +268,7 @@ The Docker configuration can be found [in our docker repository](https://github.
 
 ### Heroku
 
-<a href="https://heroku.com/deploy?template=https://github.com/calcom/cal.com">
+<a href="https://heroku.com/deploy?template=https://github.com/stark-tech-space/cal.com/tree/dbee-prod">
   <img width="185px" height="auto" src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
 </a>
 

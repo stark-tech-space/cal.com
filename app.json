@@ -1,7 +1,7 @@
 {
   "name": "Dbee Cal",
   "description": "Open Source Scheduling",
-  "repository": "https://github.com/calcom/cal.com",
+  "repository": "https://github.com/stark-tech-space/cal.com/tree/dbee-prod",
   "logo": "https://cal.com/android-chrome-512x512.png",
   "keywords": ["react", "typescript", "node", "nextjs", "prisma", "postgres", "trpc"],
   "addons": [
@@ -12,7 +12,7 @@
   "env": {
     "BASE_URL": {
       "description": "Replace HEROKU_APP_NAME with the name given to your app",
-      "value": "https://HEROKU_APP_NAME.herokuapp.com"
+      "value": "https://dbee-cal-dev.herokuapp.com"
     },
     "CALENDSO_ENCRYPTION_KEY": {
       "description": "Application Key for symmetric encryption and decryption. Must be 32 bytes for AES256 encryption algorithm.",

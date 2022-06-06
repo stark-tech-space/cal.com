@@ -17,16 +17,12 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
+        - DATABASE_URI=${DATABASE_URL}
         - NEXT_PUBLIC_WEBAPP_URL=${NEXT_PUBLIC_WEBAPP_URL}
         - NEXT_PUBLIC_LICENSE_CONSENT=${NEXT_PUBLIC_LICENSE_CONSENT}
         - NEXT_PUBLIC_TELEMETRY_KEY=${NEXT_PUBLIC_TELEMETRY_KEY}
-        - DATABASE_URL=${DATABASE_URL}
     restart: always
     ports:
       - 8080:3000
     env_file: ./.env.build
-    environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}
-    depends_on:
-      - database
     image: calcom:latest
