@@ -9,6 +9,7 @@ import { availabilityUserSelect } from "@calcom/prisma";
 import { stringToDayjs } from "@calcom/prisma/zod-utils";
 import { TimeRange, WorkingHours } from "@calcom/types/schedule";
 
+import isOutOfBounds from "@lib/isOutOfBounds";
 import getSlots from "@lib/slots";
 
 import { createRouter } from "@server/createRouter";
@@ -55,7 +56,7 @@ const checkForAvailability = ({
   currentSeats?: CurrentSeats;
 }) => {
   if (
-    !workingHours.every((workingHour) => {
+    !workingHours.some((workingHour) => {
       if (!workingHour.days.includes(time.day())) {
         return false;
       }
@@ -137,6 +138,11 @@ export const slotsRouter = createRouter().query("getSchedule", {
         beforeEventBuffer: true,
         afterEventBuffer: true,
         schedulingType: true,
+        periodType: true,
+        periodStartDate: true,
+        periodEndDate: true,
+        periodCountCalendarDays: true,
+        periodDays: true,
         schedule: {
           select: {
             availability: true,
@@ -193,18 +199,23 @@ export const slotsRouter = createRouter().query("getSchedule", {
         };
       })
     );
+
     const workingHours = userSchedules.flatMap((s) => s.workingHours);
-    console.log("workingHours", workingHours);
-    console.log("currentSeats", currentSeats);
-
     const slots: Record<string, Slot[]> = {};
-
     const availabilityCheckProps = {
       eventLength: eventType.length,
       beforeBufferTime: eventType.beforeEventBuffer,
       afterBufferTime: eventType.afterEventBuffer,
       currentSeats,
     };
+    const isWithinBounds = (_time: Parameters<typeof isOutOfBounds>[0]) =>
+      !isOutOfBounds(_time, {
+        periodType: eventType.periodType,
+        periodStartDate: eventType.periodStartDate,
+        periodEndDate: eventType.periodEndDate,
+        periodCountCalendarDays: eventType.periodCountCalendarDays,
+        periodDays: eventType.periodDays,
+      });
 
     let time = dayjs(startTime);
     do {
@@ -218,18 +229,17 @@ export const slotsRouter = createRouter().query("getSchedule", {
       });
 
       // if ROUND_ROBIN - slots stay available on some() - if normal / COLLECTIVE - slots only stay available on every()
-      const filteredTimes =
+      const filterStrategy =
         !eventType.schedulingType || eventType.schedulingType === SchedulingType.COLLECTIVE
-          ? times.filter((time) =>
-              userSchedules.every((schedule) =>
-                checkForAvailability({ time, ...schedule, ...availabilityCheckProps })
-              )
-            )
-          : times.filter((time) =>
-              userSchedules.some((schedule) =>
-                checkForAvailability({ time, ...schedule, ...availabilityCheckProps })
-              )
-            );
+          ? ("every" as const)
+          : ("some" as const);
+      const filteredTimes = times
+        .filter(isWithinBounds)
+        .filter((time) =>
+          userSchedules[filterStrategy]((schedule) =>
+            checkForAvailability({ time, ...schedule, ...availabilityCheckProps })
+          )
+        );
 
       slots[yyyymmdd(time.toDate())] = filteredTimes.map((time) => ({
         time: time.toISOString(),
