@@ -73,3 +73,7 @@ dist
 
 # Linting
 lint-results
+
+# Snaplet
+.snaplet/snapshots
+.snaplet/structure.d.ts

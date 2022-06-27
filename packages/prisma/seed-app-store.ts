@@ -1,20 +1,20 @@
-import { Prisma } from "@prisma/client";
-import fs from "fs";
-import path from "path";
+import { Prisma } from '@prisma/client';
+import fs from 'fs';
+import path from 'path';
 
-import prisma from ".";
+import prisma from '.';
 
-require("dotenv").config({ path: "../../.env.appStore" });
+require('dotenv').config({ path: '../../.env.appStore' });
 
 async function createApp(
   /** The App identifier in the DB also used for public page in `/apps/[slug]` */
-  slug: Prisma.AppCreateInput["slug"],
+  slug: Prisma.AppCreateInput['slug'],
   /** The directory name for `/packages/app-store/[dirName]` */
-  dirName: Prisma.AppCreateInput["dirName"],
-  categories: Prisma.AppCreateInput["categories"],
+  dirName: Prisma.AppCreateInput['dirName'],
+  categories: Prisma.AppCreateInput['categories'],
   /** This is used so credentials gets linked to the correct app */
-  type: Prisma.CredentialCreateInput["type"],
-  keys?: Prisma.AppCreateInput["keys"]
+  type: Prisma.CredentialCreateInput['type'],
+  keys?: Prisma.AppCreateInput['keys'],
 ) {
   await prisma.app.upsert({
     where: { slug },
@@ -31,24 +31,36 @@ async function createApp(
 // DbeeData: comment out unused apps
 async function main() {
   // Calendar apps
-  await createApp("apple-calendar", "applecalendar", ["calendar"], "apple_calendar");
-  await createApp("caldav-calendar", "caldavcalendar", ["calendar"], "caldav_calendar");
-  await createApp("exchange2013-calendar", "exchange2013calendar", ["calendar"], "exchange2013_calendar");
-  await createApp("exchange2016-calendar", "exchange2016calendar", ["calendar"], "exchange2016_calendar");
+  await createApp('apple-calendar', 'applecalendar', ['calendar'], 'apple_calendar');
+  await createApp('caldav-calendar', 'caldavcalendar', ['calendar'], 'caldav_calendar');
+  await createApp(
+    'exchange2013-calendar',
+    'exchange2013calendar',
+    ['calendar'],
+    'exchange2013_calendar',
+  );
+  await createApp(
+    'exchange2016-calendar',
+    'exchange2016calendar',
+    ['calendar'],
+    'exchange2016_calendar',
+  );
   try {
-    const { client_secret, client_id, redirect_uris } = JSON.parse(process.env.GOOGLE_API_CREDENTIALS).web;
-    await createApp("google-calendar", "googlecalendar", ["calendar"], "google_calendar", {
+    const { client_secret, client_id, redirect_uris } = JSON.parse(
+      process.env.GOOGLE_API_CREDENTIALS,
+    ).web;
+    await createApp('google-calendar', 'googlecalendar', ['calendar'], 'google_calendar', {
       client_id,
       client_secret,
       redirect_uris,
     });
-    await createApp("google-meet", "googlevideo", ["video"], "google_video", {
+    await createApp('google-meet', 'googlevideo', ['video'], 'google_video', {
       client_id,
       client_secret,
       redirect_uris,
     });
   } catch (e) {
-    if (e instanceof Error) console.error("Error adding google credentials to DB:", e.message);
+    if (e instanceof Error) console.error('Error adding google credentials to DB:', e.message);
   }
   // if (process.env.MS_GRAPH_CLIENT_ID && process.env.MS_GRAPH_CLIENT_SECRET) {
   //   await createApp("office365-calendar", "office365calendar", ["calendar"], "office365_calendar", {
@@ -75,7 +87,7 @@ async function main() {
   //   });
   // }
   if (process.env.ZOOM_CLIENT_ID && process.env.ZOOM_CLIENT_SECRET) {
-    await createApp("zoom", "zoomvideo", ["video"], "zoom_video", {
+    await createApp('zoom', 'zoomvideo', ['video'], 'zoom_video', {
       client_id: process.env.ZOOM_CLIENT_ID,
       client_secret: process.env.ZOOM_CLIENT_SECRET,
     });
@@ -88,21 +100,21 @@ async function main() {
   //     client_secret: process.env.HUBSPOT_CLIENT_SECRET,
   //   });
   // }
-  await createApp("wipe-my-cal", "wipemycalother", ["other"], "wipemycal_other");
-  // if (process.env.GIPHY_API_KEY) {
-  //   await createApp("giphy", "giphy", ["other"], "giphy_other", {
-  //     api_key: process.env.GIPHY_API_KEY,
-  //   });
-  // }
-  // await createApp("space-booking", "spacebooking", ["other"], "spacebooking_other");
-  // if (process.env.VITAL_API_KEY && process.env.VITAL_WEBHOOK_SECRET) {
-  //   await createApp("vital-automation", "vital", ["other"], "vital_other", {
-  //     mode: process.env.VITAL_DEVELOPMENT_MODE || "sandbox",
-  //     region: process.env.VITAL_REGION || "us",
-  //     api_key: process.env.VITAL_API_KEY,
-  //     webhook_secret: process.env.VITAL_WEBHOOK_SECRET,
-  //   });
-  // }
+  await createApp('wipe-my-cal', 'wipemycalother', ['other'], 'wipemycal_other');
+  if (process.env.GIPHY_API_KEY) {
+    await createApp('giphy', 'giphy', ['other'], 'giphy_other', {
+      api_key: process.env.GIPHY_API_KEY,
+    });
+  }
+
+  if (process.env.VITAL_API_KEY && process.env.VITAL_WEBHOOK_SECRET) {
+    await createApp('vital-automation', 'vital', ['other'], 'vital_other', {
+      mode: process.env.VITAL_DEVELOPMENT_MODE || 'sandbox',
+      region: process.env.VITAL_REGION || 'us',
+      api_key: process.env.VITAL_API_KEY,
+      webhook_secret: process.env.VITAL_WEBHOOK_SECRET,
+    });
+  }
 
   // if (process.env.ZAPIER_INVITE_LINK) {
   //   await createApp("zapier", "zapier", ["other"], "zapier_other", {
@@ -127,7 +139,7 @@ async function main() {
     process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY &&
     process.env.STRIPE_WEBHOOK_SECRET
   ) {
-    await createApp("stripe", "stripepayment", ["payment"], "stripe_payment", {
+    await createApp('stripe', 'stripepayment', ['payment'], 'stripe_payment', {
       client_id: process.env.STRIPE_CLIENT_ID,
       client_secret: process.env.STRIPE_PRIVATE_KEY,
       payment_fee_fixed: 10,
@@ -138,11 +150,16 @@ async function main() {
   }
 
   const generatedApps = JSON.parse(
-    fs.readFileSync(path.join(__dirname, "seed-app-store.config.json"), "utf8")
+    fs.readFileSync(path.join(__dirname, 'seed-app-store.config.json'), 'utf8'),
   );
   for (let i = 0; i < generatedApps.length; i++) {
     const generatedApp = generatedApps[i];
-    await createApp(generatedApp.slug, generatedApp.dirName, generatedApp.categories, generatedApp.type);
+    await createApp(
+      generatedApp.slug,
+      generatedApp.dirName,
+      generatedApp.categories,
+      generatedApp.type,
+    );
   }
 }
 
