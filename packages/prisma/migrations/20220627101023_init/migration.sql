@@ -329,6 +329,7 @@ CREATE TABLE "Webhook" (
     "active" BOOLEAN NOT NULL DEFAULT true,
     "eventTriggers" "WebhookTriggerEvents"[],
     "appId" TEXT,
+    "secret" TEXT,
 
     CONSTRAINT "Webhook_pkey" PRIMARY KEY ("id")
 );
