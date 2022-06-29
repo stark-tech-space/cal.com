@@ -37,7 +37,7 @@ export default function Billing() {
 
   return (
     <SettingsShell heading={t("billing")} subtitle={t("manage_your_billing_info")}>
-      <>
+      {/* <>
         <div className="py-6 lg:col-span-9 lg:pb-8">
           {data?.plan && ["FREE", "TRIAL"].includes(data.plan) && (
             <Card
@@ -74,7 +74,7 @@ export default function Billing() {
           </div>
         </div>
         {active && <HelpScout color="#292929" icon="message" horizontalPosition="right" zIndex="1" />}
-      </>
+      </> */}
     </SettingsShell>
   );
 }
