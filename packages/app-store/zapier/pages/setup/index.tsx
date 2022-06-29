@@ -11,8 +11,6 @@ import { Button, Loader, Tooltip } from "@calcom/ui";
 /** TODO: Maybe extract this into a package to prevent circular dependencies */
 import { trpc } from "@calcom/web/lib/trpc";
 
-import Icon from "../../components/icon";
-
 export interface IZapierSetupProps {
   inviteLink: string;
 }
@@ -49,7 +47,7 @@ export default function ZapierSetup(props: IZapierSetupProps) {
 
   if (integrations.isLoading) {
     return (
-      <div className="flex absolute z-50 h-screen w-full items-center bg-gray-200">
+      <div className="absolute z-50 flex h-screen w-full items-center bg-gray-200">
         <Loader />
       </div>
     );
@@ -61,7 +59,7 @@ export default function ZapierSetup(props: IZapierSetupProps) {
         <div className="m-auto rounded bg-white p-10">
           <div className="flex flex-row">
             <div className="mr-5">
-              <Icon />
+              <img className="h-11" src="/api/app-store/zapier/icon.svg" alt="Zapier Logo" />
             </div>
             <div className="ml-5">
               <div className="text-gray-600">{t("setting_up_zapier")}</div>
@@ -75,7 +73,7 @@ export default function ZapierSetup(props: IZapierSetupProps) {
               ) : (
                 <>
                   <div className="mt-1 text-xl">{t("your_unique_api_key")}</div>
-                  <div className="flex my-2 mt-3">
+                  <div className="my-2 mt-3 flex">
                     <div className="mr-1 w-full rounded bg-gray-100 p-3 pr-5">{newApiKey}</div>
                     <Tooltip content="copy to clipboard">
                       <Button

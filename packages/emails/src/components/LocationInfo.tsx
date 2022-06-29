@@ -1,11 +1,13 @@
+import type { TFunction } from "next-i18next";
+
 import { getAppName } from "@calcom/app-store/utils";
 import type { CalendarEvent } from "@calcom/types/Calendar";
 
 import { Info } from "./Info";
 import { LinkIcon } from "./LinkIcon";
 
-export function LocationInfo(props: { calEvent: CalendarEvent }) {
-  const t = props.calEvent.attendees[0].language.translate;
+export function LocationInfo(props: { calEvent: CalendarEvent; t: TFunction }) {
+  const { t } = props;
   let providerName = props.calEvent.location && getAppName(props.calEvent.location);
 
   if (props.calEvent.location && props.calEvent.location.includes("integrations:")) {
@@ -28,19 +30,18 @@ export function LocationInfo(props: { calEvent: CalendarEvent }) {
         label={t("where")}
         withSpacer
         description={
-          <>
-            {providerName}
-            {meetingUrl && (
-              <a
-                href={meetingUrl}
-                target="_blank"
-                title={t("meeting_url")}
-                style={{ color: "#3E3E3E" }}
-                rel="noreferrer">
-                <LinkIcon />
-              </a>
-            )}
-          </>
+          meetingUrl ? (
+            <a
+              href={meetingUrl}
+              target="_blank"
+              title={t("meeting_url")}
+              style={{ color: "#3E3E3E" }}
+              rel="noreferrer">
+              {providerName} <LinkIcon />
+            </a>
+          ) : (
+            <>{t("something_went_wrong")}</>
+          )
         }
         extraInfo={
           <>
@@ -74,46 +75,33 @@ export function LocationInfo(props: { calEvent: CalendarEvent }) {
     );
   }
 
-  if (props.calEvent.additionInformation?.hangoutLink) {
-    const hangoutLink: string = props.calEvent.additionInformation.hangoutLink;
+  if (props.calEvent.additionalInformation?.hangoutLink) {
+    const hangoutLink: string = props.calEvent.additionalInformation.hangoutLink;
 
     return (
       <Info
         label={t("where")}
         withSpacer
         description={
-          <>
-            {providerName}
-            {hangoutLink && (
-              <a
-                href={hangoutLink}
-                target="_blank"
-                title={t("meeting_url")}
-                style={{ color: "#3E3E3E" }}
-                rel="noreferrer">
-                <LinkIcon />
-              </a>
-            )}
-          </>
-        }
-        extraInfo={
-          providerName === "Zoom" || providerName === "Google" ? (
-            <p style={{ color: "#494949", fontWeight: 400, lineHeight: "24px" }}>
-              <>{t("meeting_url_provided_after_confirmed")}</>
-            </p>
-          ) : null
+          <a
+            href={hangoutLink}
+            target="_blank"
+            title={t("meeting_url")}
+            style={{ color: "#3E3E3E" }}
+            rel="noreferrer">
+            Google <LinkIcon />
+          </a>
         }
       />
     );
   }
-
   return (
     <Info
       label={t("where")}
       withSpacer
       description={providerName || props.calEvent.location}
       extraInfo={
-        providerName === "Zoom" || providerName === "Google" ? (
+        (providerName === "Zoom" || providerName === "Google") && props.calEvent.requiresConfirmation ? (
           <p style={{ color: "#494949", fontWeight: 400, lineHeight: "24px" }}>
             <>{t("meeting_url_provided_after_confirmed")}</>
           </p>

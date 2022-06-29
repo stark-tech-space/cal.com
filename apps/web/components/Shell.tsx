@@ -37,6 +37,7 @@ import classNames from "@lib/classNames";
 import { WEBAPP_URL } from "@lib/config/constants";
 import { shouldShowOnboarding } from "@lib/getting-started";
 import useMeQuery from "@lib/hooks/useMeQuery";
+import useTheme from "@lib/hooks/useTheme";
 import { trpc } from "@lib/trpc";
 
 import CustomBranding from "@components/CustomBranding";
@@ -249,7 +250,7 @@ const Layout = ({
                 </div>
                 <TrialBanner />
                 <div
-                  className="rounded-sm pb-2 pl-3 pt-2 pr-2 hover:bg-gray-100 lg:mx-2 lg:pl-2"
+                  className="rounded-sm pt-2 pb-2 pl-3 pr-2 hover:bg-gray-100 lg:mx-2 lg:pl-2"
                   data-testid="user-dropdown-trigger">
                   <span className="hidden lg:inline">
                     <UserDropdown />
@@ -416,6 +417,7 @@ type LayoutProps = {
 export default function Shell(props: LayoutProps) {
   const { loading, session } = useRedirectToLoginIfUnauthenticated(props.isPublic);
   const { isRedirectingToOnboarding } = useRedirectToOnboardingIfNeeded();
+  const { isReady, Theme } = useTheme("light");
 
   const query = useMeQuery();
   const user = query.data;
@@ -424,7 +426,11 @@ export default function Shell(props: LayoutProps) {
   const { status } = useSession();
 
   const isLoading =
-    i18n.status === "loading" || query.status === "loading" || isRedirectingToOnboarding || loading;
+    i18n.status === "loading" ||
+    query.status === "loading" ||
+    isRedirectingToOnboarding ||
+    loading ||
+    !isReady;
 
   if (isLoading) {
     return (
@@ -438,6 +444,7 @@ export default function Shell(props: LayoutProps) {
 
   return (
     <>
+      <Theme />
       <CustomBranding lightVal={user?.brandColor} darkVal={user?.darkBrandColor} />
       <MemoizedLayout plan={user?.plan} status={status} {...props} isLoading={isLoading} />
     </>
@@ -455,10 +462,16 @@ function UserDropdown({ small }: { small?: boolean }) {
   });
   const utils = trpc.useContext();
   const [helpOpen, setHelpOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const onHelpItemSelect = () => {
+    setHelpOpen(false);
+    setMenuOpen(false);
+  };
 
   return (
-    <Dropdown onOpenChange={() => setHelpOpen(false)}>
-      <DropdownMenuTrigger asChild>
+    <Dropdown open={menuOpen} onOpenChange={() => setHelpOpen(false)}>
+      <DropdownMenuTrigger asChild onClick={() => setMenuOpen(true)}>
         <button className="group flex w-full cursor-pointer appearance-none items-center text-left">
           <span
             className={classNames(
@@ -484,10 +497,14 @@ function UserDropdown({ small }: { small?: boolean }) {
             <span className="flex flex-grow items-center truncate">
               <span className="flex-grow truncate text-sm">
                 <span className="block truncate font-medium text-gray-900">
-                  {user?.username || "Nameless User"}
+                  {user?.name || "Nameless User"}
                 </span>
                 <span className="block truncate font-normal text-neutral-500">
-                  {user?.username ? `cal.com/${user.username}` : "No public page"}
+                  {user?.username
+                    ? process.env.NEXT_PUBLIC_WEBSITE_URL === "https://cal.com"
+                      ? `cal.com/${user.username}`
+                      : `/${user.username}`
+                    : "No public page"}
                 </span>
               </span>
               <SelectorIcon
@@ -498,9 +515,9 @@ function UserDropdown({ small }: { small?: boolean }) {
           )}
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent portalled={true}>
+      <DropdownMenuContent portalled={true} onInteractOutside={() => setMenuOpen(false)}>
         {helpOpen ? (
-          <HelpMenuItem closeHelp={() => setHelpOpen(false)} />
+          <HelpMenuItem onHelpItemSelect={() => onHelpItemSelect()} />
         ) : (
           <>
             <DropdownMenuItem>

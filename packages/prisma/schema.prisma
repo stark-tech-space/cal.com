@@ -8,7 +8,7 @@ datasource db {
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["filterJson"]
+  previewFeatures = ["filterJson", "interactiveTransactions"]
 }
 
 generator zod {
@@ -59,7 +59,7 @@ model EventType {
   periodDays              Int?
   periodCountCalendarDays Boolean?
   requiresConfirmation    Boolean                @default(false)
-  /// @zod.custom(imports.recurringEvent)
+  /// @zod.custom(imports.recurringEventType)
   recurringEvent          Json?
   disableGuests           Boolean                @default(false)
   hideCalendarNotes       Boolean                @default(false)
@@ -68,7 +68,8 @@ model EventType {
   afterEventBuffer        Int                    @default(0)
   seatsPerTimeSlot        Int?
   schedulingType          SchedulingType?
-  schedule                Schedule?
+  schedule                Schedule?              @relation(fields: [scheduleId], references: [id])
+  scheduleId              Int?
   price                   Int                    @default(0)
   currency                String                 @default("usd")
   slotInterval            Int?
@@ -86,6 +87,7 @@ model Credential {
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int?
   app    App?    @relation(fields: [appId], references: [slug], onDelete: Cascade)
+  // How to make it a required column?
   appId  String?
 }
 
@@ -164,6 +166,7 @@ model User {
   away                 Boolean              @default(false)
   // participate in dynamic group booking or not
   allowDynamicBooking  Boolean?             @default(true)
+  /// @zod.custom(imports.userMetadata)
   metadata             Json?
   verified             Boolean?             @default(false)
   role                 UserPermissionRole   @default(USER)
@@ -290,8 +293,7 @@ model Schedule {
   id           Int            @id @default(autoincrement())
   user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       Int
-  eventType    EventType?     @relation(fields: [eventTypeId], references: [id])
-  eventTypeId  Int?           @unique
+  eventType    EventType[]
   name         String
   timeZone     String?
   availability Availability[]
@@ -395,6 +397,7 @@ model Webhook {
   eventType       EventType?             @relation(fields: [eventTypeId], references: [id], onDelete: Cascade)
   app             App?                   @relation(fields: [appId], references: [slug], onDelete: Cascade)
   appId           String?
+  secret          String?
 }
 
 model Impersonations {

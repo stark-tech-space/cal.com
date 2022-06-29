@@ -6,6 +6,7 @@ import { getTranslation } from "@calcom/lib/server/i18n";
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (process.env.NODE_ENV !== "development") return res.write("Only for development purposes"), res.end();
   const t = await getTranslation("en", "common");
+  const language = { translate: t, locale: "en" };
 
   const evt = {
     type: "30min",
@@ -22,14 +23,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       name: "Pro Example",
       email: "pro@example.com",
       timeZone: "Europe/London",
-      language: { translate: t, locale: "en" },
+      language,
     },
     attendees: [
       {
         email: "pro@example.com",
         name: "pro@example.com",
         timeZone: "America/Chihuahua",
-        language: { translate: t, locale: "en" },
+        language,
       },
     ],
     location: "Zoom video",
@@ -39,6 +40,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     metadata: {},
     cancellationReason: "It got late",
     paymentInfo: { id: "pi_12312", link: "https://cal.com", reason: "no reason" },
+    recurringEvent: null,
   };
 
   req.statusCode = 200;
@@ -49,7 +51,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     renderEmail("OrganizerRequestReminderEmail", {
       attendee: evt.attendees[0],
       calEvent: evt,
-      recurringEvent: {},
     })
   );
   res.end();
