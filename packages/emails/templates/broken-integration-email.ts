@@ -43,7 +43,7 @@ export default class BrokenIntegrationEmail extends BaseEmail {
     }
 
     return {
-      from: `Cal.com <${this.getMailerOptions().from}>`,
+      from: `DBee Calendar${this.getMailerOptions().from}>`,
       to: toAddresses.join(","),
       subject: `[Action Required] ${this.t("confirmed_event_type_subject", {
         eventType: this.calEvent.type,
