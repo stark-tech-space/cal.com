@@ -143,24 +143,24 @@ const Layout = ({
       icon: ClockIcon,
       current: router.asPath.startsWith("/availability"),
     },
-    {
-      name: t("apps"),
-      href: "/apps",
-      icon: ViewGridIcon,
-      current: router.asPath.startsWith("/apps"),
-      child: [
-        {
-          name: t("app_store"),
-          href: "/apps",
-          current: router.asPath === "/apps",
-        },
-        {
-          name: t("installed_apps"),
-          href: "/apps/installed",
-          current: router.asPath === "/apps/installed",
-        },
-      ],
-    },
+    // {
+    //   name: t("apps"),
+    //   href: "/apps",
+    //   icon: ViewGridIcon,
+    //   current: router.asPath.startsWith("/apps"),
+    //   child: [
+    //     {
+    //       name: t("app_store"),
+    //       href: "/apps",
+    //       current: router.asPath === "/apps",
+    //     },
+    //     {
+    //       name: t("installed_apps"),
+    //       href: "/apps/installed",
+    //       current: router.asPath === "/apps/installed",
+    //     },
+    //   ],
+    // },
     {
       name: t("settings"),
       href: "/settings/profile",
