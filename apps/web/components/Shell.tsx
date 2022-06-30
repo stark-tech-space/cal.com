@@ -143,7 +143,7 @@ const Layout = ({
       icon: ClockIcon,
       current: router.asPath.startsWith("/availability"),
     },
-    // {
+    // commented out apps link {
     //   name: t("apps"),
     //   href: "/apps",
     //   icon: ViewGridIcon,
@@ -227,7 +227,7 @@ const Layout = ({
                             <span className="hidden lg:inline">{item.name}</span>
                           </a>
                         </Link>
-                        {item.child &&
+                        {/* commented because no apps {item.child &&
                           router.asPath.startsWith(item.href) &&
                           item.child.map((item) => {
                             return (
@@ -243,7 +243,7 @@ const Layout = ({
                                 </a>
                               </Link>
                             );
-                          })}
+                          })} */}
                       </Fragment>
                     ))}
                   </nav>
