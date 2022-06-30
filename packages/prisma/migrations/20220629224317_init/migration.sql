@@ -62,6 +62,7 @@ CREATE TABLE "EventType" (
     "afterEventBuffer" INTEGER NOT NULL DEFAULT 0,
     "seatsPerTimeSlot" INTEGER,
     "schedulingType" "SchedulingType",
+    "scheduleId" INTEGER,
     "price" INTEGER NOT NULL DEFAULT 0,
     "currency" TEXT NOT NULL DEFAULT E'usd',
     "slotInterval" INTEGER,
@@ -237,7 +238,6 @@ CREATE TABLE "Booking" (
 CREATE TABLE "Schedule" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
-    "eventTypeId" INTEGER,
     "name" TEXT NOT NULL,
     "timeZone" TEXT,
 
@@ -461,9 +461,6 @@ CREATE UNIQUE INDEX "DailyEventReference_bookingId_key" ON "DailyEventReference"
 CREATE UNIQUE INDEX "Booking_uid_key" ON "Booking"("uid");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Schedule_eventTypeId_key" ON "Schedule"("eventTypeId");
-
--- CreateIndex
 CREATE UNIQUE INDEX "Payment_uid_key" ON "Payment"("uid");
 
 -- CreateIndex
@@ -506,6 +503,9 @@ CREATE INDEX "_user_eventtype_B_index" ON "_user_eventtype"("B");
 ALTER TABLE "EventType" ADD CONSTRAINT "EventType_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "Team"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "EventType" ADD CONSTRAINT "EventType_scheduleId_fkey" FOREIGN KEY ("scheduleId") REFERENCES "Schedule"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Credential" ADD CONSTRAINT "Credential_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -540,9 +540,6 @@ ALTER TABLE "Booking" ADD CONSTRAINT "Booking_eventTypeId_fkey" FOREIGN KEY ("ev
 
 -- AddForeignKey
 ALTER TABLE "Booking" ADD CONSTRAINT "Booking_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Schedule" ADD CONSTRAINT "Schedule_eventTypeId_fkey" FOREIGN KEY ("eventTypeId") REFERENCES "EventType"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Schedule" ADD CONSTRAINT "Schedule_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
