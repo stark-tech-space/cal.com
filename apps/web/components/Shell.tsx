@@ -173,7 +173,7 @@ const Layout = ({
   return (
     <>
       <HeadSeo
-        title={pageTitle ?? "Cal.com"}
+        title={pageTitle ?? "DBee Calendar"}
         description={props.subtitle ? props.subtitle?.toString() : ""}
         nextSeoProps={{
           nofollow: true,
@@ -501,8 +501,8 @@ function UserDropdown({ small }: { small?: boolean }) {
                 </span>
                 <span className="block truncate font-normal text-neutral-500">
                   {user?.username
-                    ? process.env.NEXT_PUBLIC_WEBSITE_URL === "https://cal.com"
-                      ? `cal.com/${user.username}`
+                    ? process.env.NEXT_PUBLIC_WEBSITE_URL === "https://calendar.dbeedata.com"
+                      ? `calendar.dbeedata.com/${user.username}`
                       : `/${user.username}`
                     : "No public page"}
                 </span>

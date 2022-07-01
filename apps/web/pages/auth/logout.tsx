@@ -22,7 +22,7 @@ export default function Logout(props: Props) {
   const router = useRouter();
   useEffect(() => {
     if (props.query?.survey === "true") {
-      router.push("https://cal.com/cancellation");
+      router.push("https://calendar.dbeedata.com/cancellation");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.query?.survey]);

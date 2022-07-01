@@ -97,7 +97,7 @@ function SettingsView(props: ComponentProps<typeof Settings> & { localeProp: str
     }).catch((e) => {
       console.error(`Error Removing user: ${props.user.id}, email: ${props.user.email} :`, e);
     });
-    if (process.env.NEXT_PUBLIC_WEBAPP_URL === "https://app.cal.com") {
+    if (process.env.NEXT_PUBLIC_WEBAPP_URL === "https://calendar.dbeedata.com") {
       signOut({ callbackUrl: "/auth/logout?survey=true" });
     } else {
       signOut({ callbackUrl: "/auth/logout" });

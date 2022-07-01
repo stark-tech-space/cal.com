@@ -292,7 +292,7 @@ export default function Onboarding(props: inferSSRProps<typeof getServerSideProp
               </h2>
               <p className="mb-2 text-sm text-gray-500">
                 {t("you_will_need_to_generate")}. Find out how to do this{" "}
-                <a href="https://docs.cal.com/import">here</a>.
+                <a href="https://docs.calendar.dbeedata.com/import">here</a>.
               </p>
               <form
                 className="flex"
@@ -542,7 +542,7 @@ export default function Onboarding(props: inferSSRProps<typeof getServerSideProp
   return (
     <div className="bg-brand min-h-screen" data-testid="onboarding">
       <Head>
-        <title>Cal.com - {t("getting_started")}</title>
+        <title>DBee Calendar - {t("getting_started")}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 

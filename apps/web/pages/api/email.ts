@@ -39,7 +39,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     uid: "bwPWLpjYrx4rZf6MCZdKgE",
     metadata: {},
     cancellationReason: "It got late",
-    paymentInfo: { id: "pi_12312", link: "https://cal.com", reason: "no reason" },
+    paymentInfo: { id: "pi_12312", link: "https://calendar.dbeedata.com", reason: "no reason" },
     recurringEvent: null,
   };
 

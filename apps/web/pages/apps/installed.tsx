@@ -161,7 +161,7 @@ function Web3Container() {
                       <a
                         className="text-blue-500"
                         target="_blank"
-                        href="https://cal.com/web3"
+                        href="https://calendar.dbeedata.com/web3"
                         rel="noreferrer">
                         Read more
                       </a>

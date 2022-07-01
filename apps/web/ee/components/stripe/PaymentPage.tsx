@@ -52,7 +52,7 @@ const PaymentPage: FC<PaymentPageProps> = (props) => {
       <Theme />
       <Head>
         <title>
-          {t("payment")} | {eventName} | Cal.com
+          {t("payment")} | {eventName} | DBee Calendar
         </title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -141,7 +141,7 @@ const PaymentPage: FC<PaymentPageProps> = (props) => {
                 </div>
                 {!props.profile.hideBranding && (
                   <div className="mt-4 border-t pt-4 text-center text-xs text-gray-400 dark:border-gray-900 dark:text-white">
-                    <a href="https://cal.com/signup">{t("create_booking_link_with_calcom")}</a>
+                    <a href="https://calendar.dbeedata.com/signup">{t("create_booking_link_with_calcom")}</a>
                   </div>
                 )}
               </div>

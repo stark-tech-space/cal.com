@@ -438,7 +438,7 @@ const BookingPage = ({
                 eventTypeTitle: eventType.title,
                 profileName: profile.name,
               })}{" "}
-          | Cal.com
+          | DBee Calendar
         </title>
         <link rel="icon" href="/favicon.ico" />
       </Head>

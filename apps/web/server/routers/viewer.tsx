@@ -42,7 +42,9 @@ import { viewerTeamsRouter } from "./viewer/teams";
 import { webhookRouter } from "./viewer/webhook";
 
 const checkUsername =
-  process.env.NEXT_PUBLIC_WEBSITE_URL === "https://cal.com" ? checkPremiumUsername : checkRegularUsername;
+  process.env.NEXT_PUBLIC_WEBSITE_URL === "https://calendar.dbeedata.com"
+    ? checkPremiumUsername
+    : checkRegularUsername;
 
 // things that unauthenticated users can query about themselves
 const publicViewerRouter = createRouter()
