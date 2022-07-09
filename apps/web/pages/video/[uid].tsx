@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
+import { WEBSITE_URL, SEO_IMG_OGIMG_VIDEO } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import prisma, { bookingMinimalSelect } from "@calcom/prisma";
 import { inferSSRProps } from "@calcom/types/inferSSRProps";
@@ -107,18 +108,18 @@ export default function JoinCall(props: JoinCallPageProps) {
   return (
     <>
       <Head>
-        <title>DBee Calendar Video</title>
-        <meta name="title" content="DBee Calendar Video" />
+        <title>Cal.com Video</title>
+        <meta name="title" content="Cal.com Video" />
         <meta name="description" content={t("quick_video_meeting")} />
-        <meta property="og:image" content="https://calendar.dbeedata.com/video-og-image.png" />
+        <meta property="og:image" content={SEO_IMG_OGIMG_VIDEO} />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://calendar.dbeedata.com/video" />
-        <meta property="og:title" content="calendar.dbeedata.com Video" />
+        <meta property="og:url" content={`${WEBSITE_URL}/video`} />
+        <meta property="og:title" content="Cal.com Video" />
         <meta property="og:description" content={t("quick_video_meeting")} />
-        <meta property="twitter:image" content="https://calendar.dbeedata.com/video-og-image.png" />
+        <meta property="twitter:image" content={SEO_IMG_OGIMG_VIDEO} />
         <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content="https://calendar.dbeedata.com/video" />
-        <meta property="twitter:title" content="DBee Calendar Video" />
+        <meta property="twitter:url" content={`${WEBSITE_URL}/video`} />
+        <meta property="twitter:title" content="Cal.com Video" />
         <meta property="twitter:description" content={t("quick_video_meeting")} />
       </Head>
       <div style={{ zIndex: 2, position: "relative" }}>
@@ -128,8 +129,8 @@ export default function JoinCall(props: JoinCallPageProps) {
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 className="h-5·w-auto fixed z-10 hidden sm:inline-block"
-                src="https://calendar.dbeedata.com/logo-white.svg"
-                alt="DBee Calendar Logo"
+                src={`${WEBSITE_URL}/logo-white.svg`}
+                alt="Cal.com Logo"
                 style={{
                   top: 46,
                   left: 24,
