@@ -32,10 +32,11 @@ const LicenseRequired: FC<LicenseRequiredProps> = ({ children, as = "", ...rest 
               To enable this feature, get a deployment key at{" "}
               <a href={CONSOLE_URL} target="_blank" rel="noopener noreferrer" className="underline">
                 DBee Calendar console
-              </a>
-              . If your team already has a license, please contact{" "}
-              <a href="mailto:peer@cal.com" className="underline">
-                peer@cal.com
+              </a>{" "}
+              and add it to your .env as <code>CALCOM_LICENSE_KEY</code>. If your team already has a license,
+              please contact{" "}
+              <a href="mailto:service@dbeedata.com" className="underline">
+                service@dbeedata.com
               </a>{" "}
               for help.
             </>
