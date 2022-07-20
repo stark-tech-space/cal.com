@@ -34,6 +34,21 @@ CREATE TYPE "WebhookTriggerEvents" AS ENUM ('BOOKING_CREATED', 'BOOKING_RESCHEDU
 -- CreateEnum
 CREATE TYPE "AppCategories" AS ENUM ('calendar', 'messaging', 'other', 'payment', 'video', 'web3');
 
+-- CreateEnum
+CREATE TYPE "WorkflowTriggerEvents" AS ENUM ('BEFORE_EVENT', 'EVENT_CANCELLED', 'NEW_EVENT');
+
+-- CreateEnum
+CREATE TYPE "WorkflowActions" AS ENUM ('EMAIL_HOST', 'EMAIL_ATTENDEE', 'SMS_ATTENDEE', 'SMS_NUMBER');
+
+-- CreateEnum
+CREATE TYPE "TimeUnit" AS ENUM ('day', 'hour', 'minute');
+
+-- CreateEnum
+CREATE TYPE "WorkflowTemplates" AS ENUM ('REMINDER', 'CUSTOM');
+
+-- CreateEnum
+CREATE TYPE "WorkflowMethods" AS ENUM ('EMAIL', 'SMS');
+
 -- CreateTable
 CREATE TABLE "EventType" (
     "id" SERIAL NOT NULL,
@@ -89,8 +104,8 @@ CREATE TABLE "DestinationCalendar" (
     "integration" TEXT NOT NULL,
     "externalId" TEXT NOT NULL,
     "userId" INTEGER,
-    "bookingId" INTEGER,
     "eventTypeId" INTEGER,
+    "credentialId" INTEGER,
 
     CONSTRAINT "DestinationCalendar_pkey" PRIMARY KEY ("id")
 );
@@ -181,6 +196,7 @@ CREATE TABLE "BookingReference" (
     "bookingId" INTEGER,
     "externalCalendarId" TEXT,
     "deleted" BOOLEAN,
+    "credentialId" INTEGER,
 
     CONSTRAINT "BookingReference_pkey" PRIMARY KEY ("id")
 );
@@ -223,6 +239,7 @@ CREATE TABLE "Booking" (
     "updatedAt" TIMESTAMP(3),
     "status" "BookingStatus" NOT NULL DEFAULT E'accepted',
     "paid" BOOLEAN NOT NULL DEFAULT false,
+    "destinationCalendarId" INTEGER,
     "cancellationReason" TEXT,
     "rejectionReason" TEXT,
     "dynamicEventSlugRef" TEXT,
@@ -230,6 +247,7 @@ CREATE TABLE "Booking" (
     "rescheduled" BOOLEAN,
     "fromReschedule" TEXT,
     "recurringEventId" TEXT,
+    "smsReminderNumber" TEXT,
 
     CONSTRAINT "Booking_pkey" PRIMARY KEY ("id")
 );
@@ -408,6 +426,31 @@ CREATE TABLE "App" (
 );
 
 -- CreateTable
+CREATE TABLE "App_RoutingForms_Form" (
+    "id" TEXT NOT NULL,
+    "description" TEXT,
+    "routes" JSONB,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "name" TEXT NOT NULL,
+    "fields" JSONB,
+    "userId" INTEGER NOT NULL,
+    "disabled" BOOLEAN NOT NULL DEFAULT false,
+
+    CONSTRAINT "App_RoutingForms_Form_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "App_RoutingForms_FormResponse" (
+    "id" SERIAL NOT NULL,
+    "formFillerId" TEXT NOT NULL,
+    "formId" TEXT NOT NULL,
+    "response" JSONB NOT NULL,
+
+    CONSTRAINT "App_RoutingForms_FormResponse_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Feedback" (
     "id" SERIAL NOT NULL,
     "date" TIMESTAMP(3) NOT NULL,
@@ -416,6 +459,54 @@ CREATE TABLE "Feedback" (
     "comment" TEXT,
 
     CONSTRAINT "Feedback_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "WorkflowStep" (
+    "id" SERIAL NOT NULL,
+    "stepNumber" INTEGER NOT NULL,
+    "action" "WorkflowActions" NOT NULL,
+    "workflowId" INTEGER NOT NULL,
+    "sendTo" TEXT,
+    "reminderBody" TEXT,
+    "emailSubject" TEXT,
+    "template" "WorkflowTemplates" NOT NULL DEFAULT E'REMINDER',
+
+    CONSTRAINT "WorkflowStep_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Workflow" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "trigger" "WorkflowTriggerEvents" NOT NULL,
+    "time" INTEGER,
+    "timeUnit" "TimeUnit",
+
+    CONSTRAINT "Workflow_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "WorkflowsOnEventTypes" (
+    "id" SERIAL NOT NULL,
+    "workflowId" INTEGER NOT NULL,
+    "eventTypeId" INTEGER NOT NULL,
+
+    CONSTRAINT "WorkflowsOnEventTypes_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "WorkflowReminder" (
+    "id" SERIAL NOT NULL,
+    "bookingUid" TEXT NOT NULL,
+    "method" "WorkflowMethods" NOT NULL,
+    "scheduledDate" TIMESTAMP(3) NOT NULL,
+    "referenceId" TEXT,
+    "scheduled" BOOLEAN NOT NULL,
+    "workflowStepId" INTEGER NOT NULL,
+
+    CONSTRAINT "WorkflowReminder_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -432,9 +523,6 @@ CREATE UNIQUE INDEX "EventType_teamId_slug_key" ON "EventType"("teamId", "slug")
 
 -- CreateIndex
 CREATE UNIQUE INDEX "DestinationCalendar_userId_key" ON "DestinationCalendar"("userId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "DestinationCalendar_bookingId_key" ON "DestinationCalendar"("bookingId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "DestinationCalendar_eventTypeId_key" ON "DestinationCalendar"("eventTypeId");
@@ -494,6 +582,12 @@ CREATE UNIQUE INDEX "App_slug_key" ON "App"("slug");
 CREATE UNIQUE INDEX "App_dirName_key" ON "App"("dirName");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "App_RoutingForms_FormResponse_formFillerId_formId_key" ON "App_RoutingForms_FormResponse"("formFillerId", "formId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "WorkflowReminder_referenceId_key" ON "WorkflowReminder"("referenceId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "_user_eventtype_AB_unique" ON "_user_eventtype"("A", "B");
 
 -- CreateIndex
@@ -515,10 +609,10 @@ ALTER TABLE "Credential" ADD CONSTRAINT "Credential_appId_fkey" FOREIGN KEY ("ap
 ALTER TABLE "DestinationCalendar" ADD CONSTRAINT "DestinationCalendar_eventTypeId_fkey" FOREIGN KEY ("eventTypeId") REFERENCES "EventType"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "DestinationCalendar" ADD CONSTRAINT "DestinationCalendar_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "DestinationCalendar" ADD CONSTRAINT "DestinationCalendar_credentialId_fkey" FOREIGN KEY ("credentialId") REFERENCES "Credential"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "DestinationCalendar" ADD CONSTRAINT "DestinationCalendar_bookingId_fkey" FOREIGN KEY ("bookingId") REFERENCES "Booking"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "DestinationCalendar" ADD CONSTRAINT "DestinationCalendar_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Membership" ADD CONSTRAINT "Membership_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -537,6 +631,9 @@ ALTER TABLE "DailyEventReference" ADD CONSTRAINT "DailyEventReference_bookingId_
 
 -- AddForeignKey
 ALTER TABLE "Booking" ADD CONSTRAINT "Booking_eventTypeId_fkey" FOREIGN KEY ("eventTypeId") REFERENCES "EventType"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Booking" ADD CONSTRAINT "Booking_destinationCalendarId_fkey" FOREIGN KEY ("destinationCalendarId") REFERENCES "DestinationCalendar"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Booking" ADD CONSTRAINT "Booking_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -593,7 +690,31 @@ ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId"
 ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "App_RoutingForms_Form" ADD CONSTRAINT "App_RoutingForms_Form_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "App_RoutingForms_FormResponse" ADD CONSTRAINT "App_RoutingForms_FormResponse_formId_fkey" FOREIGN KEY ("formId") REFERENCES "App_RoutingForms_Form"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Feedback" ADD CONSTRAINT "Feedback_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "WorkflowStep" ADD CONSTRAINT "WorkflowStep_workflowId_fkey" FOREIGN KEY ("workflowId") REFERENCES "Workflow"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Workflow" ADD CONSTRAINT "Workflow_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "WorkflowsOnEventTypes" ADD CONSTRAINT "WorkflowsOnEventTypes_eventTypeId_fkey" FOREIGN KEY ("eventTypeId") REFERENCES "EventType"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "WorkflowsOnEventTypes" ADD CONSTRAINT "WorkflowsOnEventTypes_workflowId_fkey" FOREIGN KEY ("workflowId") REFERENCES "Workflow"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "WorkflowReminder" ADD CONSTRAINT "WorkflowReminder_bookingUid_fkey" FOREIGN KEY ("bookingUid") REFERENCES "Booking"("uid") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "WorkflowReminder" ADD CONSTRAINT "WorkflowReminder_workflowStepId_fkey" FOREIGN KEY ("workflowStepId") REFERENCES "WorkflowStep"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_user_eventtype" ADD CONSTRAINT "_user_eventtype_A_fkey" FOREIGN KEY ("A") REFERENCES "EventType"("id") ON DELETE CASCADE ON UPDATE CASCADE;
