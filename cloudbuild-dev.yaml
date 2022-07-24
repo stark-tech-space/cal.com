@@ -1,0 +1,42 @@
+steps:
+  # Docker Build
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args: [
+      '-c',
+      'touch .env && echo NODE_ENV=production >> .env && docker compose up --detach database && docker compose build calcom',
+    ]
+
+  # Retag the old image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['tag',
+    'calcom:latest',
+    'asia-northeast1-docker.pkg.dev/${PROJECT_ID}/stark-tech/${REPO_NAME}/${BRANCH_NAME}/${COMMIT_SHA}']
+
+  # Docker Push
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      [
+        'push',
+        'asia-northeast1-docker.pkg.dev/${PROJECT_ID}/stark-tech/${REPO_NAME}/${BRANCH_NAME}/${COMMIT_SHA}',
+      ]
+
+  # deploy to cloud run, timeout and environment variables
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    timeout: 240s
+    args:
+      [
+        'run',
+        'deploy',
+        'dbee-cal',
+        '--image',
+        'asia-northeast1-docker.pkg.dev/${PROJECT_ID}/stark-tech/${REPO_NAME}/${BRANCH_NAME}/${COMMIT_SHA}',
+        '--region',
+        'asia-northeast1'
+      ]
+timeout: 1200s
+images:
+  - asia-northeast1-docker.pkg.dev/${PROJECT_ID}/stark-tech/${REPO_NAME}/${BRANCH_NAME}/${COMMIT_SHA}
+options:
+  machineType: 'E2_HIGHCPU_8'
