@@ -7,7 +7,7 @@ export default function Error500() {
   return (
     <div className="flex h-screen">
       <Head>
-        <title>Something unexpected occurred | DBee Calendar</title>
+        <title>Something unexpected occurred | Cal.com</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="m-auto text-center">

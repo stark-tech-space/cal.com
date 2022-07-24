@@ -14,7 +14,7 @@ export default class OrganizerCancelledEmail extends OrganizerScheduledEmail {
     }
 
     return {
-      from: `DBee Calendar${this.getMailerOptions().from}>`,
+      from: `Cal.com <${this.getMailerOptions().from}>`,
       to: toAddresses.join(","),
       subject: `${this.t("event_cancelled_subject", {
         eventType: this.calEvent.type,

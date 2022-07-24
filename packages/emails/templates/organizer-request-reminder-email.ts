@@ -14,7 +14,7 @@ export default class OrganizerRequestReminderEmail extends OrganizerRequestEmail
     }
 
     return {
-      from: `DBee Calendar${this.getMailerOptions().from}>`,
+      from: `Cal.com <${this.getMailerOptions().from}>`,
       to: toAddresses.join(","),
       subject: `${this.t("event_awaiting_approval_subject", {
         eventType: this.calEvent.type,

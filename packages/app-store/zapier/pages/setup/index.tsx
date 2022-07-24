@@ -6,8 +6,10 @@ import { Toaster } from "react-hot-toast";
 
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import showToast from "@calcom/lib/notification";
-import { trpc } from "@calcom/trpc/react";
 import { Button, Loader, Tooltip } from "@calcom/ui";
+
+/** TODO: Maybe extract this into a package to prevent circular dependencies */
+import { trpc } from "@calcom/web/lib/trpc";
 
 export interface IZapierSetupProps {
   inviteLink: string;
@@ -19,7 +21,11 @@ export default function ZapierSetup(props: IZapierSetupProps) {
   const [newApiKey, setNewApiKey] = useState("");
   const { t } = useLocale();
   const utils = trpc.useContext();
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const integrations = trpc.useQuery(["viewer.integrations", { variant: "other" }]);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const oldApiKey = trpc.useQuery(["viewer.apiKeys.findKeyOfType", { appId: ZAPIER }]);
 
   const deleteApiKey = trpc.useMutation("viewer.apiKeys.delete");
@@ -32,6 +38,8 @@ export default function ZapierSetup(props: IZapierSetupProps) {
 
   async function createApiKey() {
     const event = { note: "Zapier", expiresAt: null, appId: ZAPIER };
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     const apiKey = await utils.client.mutation("viewer.apiKeys.create", event);
     if (oldApiKey.data) {
       deleteApiKey.mutate({

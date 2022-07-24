@@ -2,7 +2,8 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 
 import { useEmbedTheme } from "@calcom/embed-core/embed-iframe";
-import { Maybe } from "@calcom/trpc/server";
+
+import { Maybe } from "@trpc/server";
 
 // This method is stringified and executed only on client. So,
 // - Pass all the params explicitly to this method. Don't use closure

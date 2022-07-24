@@ -22,7 +22,6 @@ import React, { Fragment, useEffect, useState } from "react";
 import { CAL_URL, WEBAPP_URL } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import showToast from "@calcom/lib/notification";
-import { inferQueryOutput, trpc } from "@calcom/trpc/react";
 import { Button } from "@calcom/ui";
 import { Alert } from "@calcom/ui/Alert";
 import { Dialog } from "@calcom/ui/Dialog";
@@ -38,6 +37,7 @@ import { Tooltip } from "@calcom/ui/Tooltip";
 import { withQuery } from "@lib/QueryCell";
 import classNames from "@lib/classNames";
 import { HttpError } from "@lib/core/http/error";
+import { inferQueryOutput, trpc } from "@lib/trpc";
 
 import { EmbedButton, EmbedDialog } from "@components/Embed";
 import Shell from "@components/Shell";
@@ -547,7 +547,7 @@ const EventTypesPage = () => {
   return (
     <div>
       <Head>
-        <title>Home | DBee Calendar</title>
+        <title>Home | Cal.com</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Shell

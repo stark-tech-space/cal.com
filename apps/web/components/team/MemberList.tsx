@@ -1,4 +1,4 @@
-import { inferQueryOutput } from "@calcom/trpc/react";
+import { inferQueryOutput } from "@lib/trpc";
 
 import MemberListItem from "./MemberListItem";
 

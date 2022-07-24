@@ -1,9 +1,10 @@
 import { GetServerSidePropsContext } from "next";
 import superjson from "superjson";
 
-import { createSSGHelpers } from "@calcom/trpc/react/ssg";
-import { createContext } from "@calcom/trpc/server/createContext";
-import { appRouter } from "@calcom/trpc/server/routers/_app";
+import { createContext } from "@server/createContext";
+import { createSSGHelpers } from "@trpc/react/ssg";
+
+import { appRouter } from "../routers/_app";
 
 /**
  * Initialize server-side rendering tRPC helpers.

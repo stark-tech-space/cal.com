@@ -42,7 +42,7 @@ export default function Custom404() {
   const isSuccessPage = router.asPath.startsWith("/success");
   const isSubpage = router.asPath.includes("/", 2) || isSuccessPage;
   const isSignup = router.asPath.startsWith("/signup");
-  const isCalcom = process.env.NEXT_PUBLIC_WEBAPP_URL === "https://app.calendar.dbeedata.com";
+  const isCalcom = process.env.NEXT_PUBLIC_WEBAPP_URL === "https://app.cal.com";
 
   return (
     <>
@@ -56,7 +56,7 @@ export default function Custom404() {
       />
       <div className="min-h-screen bg-white px-4" data-testid="404-page">
         <main className="mx-auto max-w-xl pt-16 pb-6 sm:pt-24">
-          {isSignup && process.env.NEXT_PUBLIC_WEBAPP_URL !== "https://app.calendar.dbeedata.com" ? (
+          {isSignup && process.env.NEXT_PUBLIC_WEBAPP_URL !== "https://app.cal.com" ? (
             <div>
               <div>
                 <p className="text-sm font-semibold uppercase tracking-wide text-black">
@@ -193,8 +193,7 @@ export default function Custom404() {
                 ) : isCalcom ? (
                   <Link href={url}>
                     <a className="mt-2 inline-block text-lg">
-                      {t("the_username")}{" "}
-                      <strong className="text-blue-500">calendar.dbeedata.com{username}</strong>{" "}
+                      {t("the_username")} <strong className="text-blue-500">cal.com{username}</strong>{" "}
                       {t("is_still_available")} <span className="text-blue-500">{t("register_now")}</span>.
                     </a>
                   </Link>

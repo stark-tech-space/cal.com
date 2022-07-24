@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 import showToast from "@calcom/lib/notification";
-import { trpc } from "@calcom/trpc/react";
 import { SkeletonAvatar, SkeletonText } from "@calcom/ui";
 import { Alert } from "@calcom/ui/Alert";
 import { Button } from "@calcom/ui/Button";
@@ -14,6 +13,7 @@ import { QueryCell } from "@lib/QueryCell";
 import { getPlaceholderAvatar } from "@lib/getPlaceholderAvatar";
 import useCurrentUserId from "@lib/hooks/useCurrentUserId";
 import { useLocale } from "@lib/hooks/useLocale";
+import { trpc } from "@lib/trpc";
 
 import Shell from "@components/Shell";
 import DisableTeamImpersonation from "@components/team/DisableTeamImpersonation";
@@ -108,8 +108,8 @@ export function TeamSettingsPage() {
                         message={
                           <>
                             {t("hidden_team_owner_message")} <UpgradeToFlexibleProModal teamId={team.id} />
-                            {/* <a href={"https://calendar.dbeedata.com/upgrade"} className="underline">
-                              {"https://calendar.dbeedata.com/upgrade"}
+                            {/* <a href={"https://cal.com/upgrade"} className="underline">
+                              {"https://cal.com/upgrade"}
                             </a> */}
                           </>
                         }

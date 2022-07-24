@@ -5,15 +5,14 @@ const withTM = require("next-transpile-modules")([
   "@calcom/core",
   "@calcom/dayjs",
   "@calcom/ee",
+  "@calcom/lib",
+  "@calcom/prisma",
+  "@calcom/stripe",
+  "@calcom/ui",
   "@calcom/emails",
   "@calcom/embed-core",
   "@calcom/embed-react",
   "@calcom/embed-snippet",
-  "@calcom/lib",
-  "@calcom/prisma",
-  "@calcom/stripe",
-  "@calcom/trpc",
-  "@calcom/ui",
 ]);
 const { i18n } = require("./next-i18next.config");
 
@@ -107,12 +106,6 @@ const nextConfig = {
   async redirects() {
     const redirects = [
       {
-        source: "/signup",
-        destination: "https://dbeecalsignup.paperform.com",
-        permanent: false,
-        basePath: false,
-      },
-      {
         source: "/settings",
         destination: "/settings/profile",
         permanent: true,
@@ -129,7 +122,7 @@ const nextConfig = {
       },
     ];
 
-    if (process.env.NEXT_PUBLIC_WEBAPP_URL === "https://calendar.dbeedata.com") {
+    if (process.env.NEXT_PUBLIC_WEBAPP_URL === "https://app.cal.com") {
       redirects.push(
         {
           source: "/apps/dailyvideo",
