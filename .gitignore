@@ -40,6 +40,7 @@ yarn-error.log*
 .env.*
 !.env.example
 !.env.appStore.example
+!.env.build
 
 # vercel
 .vercel
@@ -72,6 +73,9 @@ dist
 
 # Linting
 lint-results
+
+#Storybook
+apps/storybook/build-storybook.log
 
 # Snaplet
 .snaplet/snapshots

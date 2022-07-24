@@ -66,7 +66,7 @@ const buildSeoMeta = (pageProps: {
 const constructImage = (name: string, description: string, username: string): string => {
   return (
     encodeURIComponent("Meet **" + name + "** <br>" + description).replace(/'/g, "%27") +
-    ".png?md=1&images=https%3A%2F%2Fcal.com%2Flogo-white.svg&images=" +
+    ".png?md=1&images=https%3A%2F%2Fcalendar.dbeedata.com%2Flogo-white.svg&images=" +
     (process.env.NEXT_PUBLIC_WEBSITE_URL || process.env.NEXT_PUBLIC_WEBAPP_URL) +
     "/" +
     username +
@@ -89,7 +89,7 @@ export const HeadSeo = (props: HeadSeoProps): JSX.Element => {
   } = props;
 
   const truncatedDescription = description.length > 24 ? description.substring(0, 23) + "..." : description;
-  const pageTitle = title + " | Cal.com";
+  const pageTitle = title + " | DBee Calendar";
   let seoObject = buildSeoMeta({
     title: pageTitle,
     image,

@@ -16,11 +16,10 @@ import useAddAppMutation from "@calcom/app-store/_utils/useAddAppMutation";
 import { InstallAppButton } from "@calcom/app-store/components";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import showToast from "@calcom/lib/notification";
+import { trpc } from "@calcom/trpc/react";
 import { App as AppType } from "@calcom/types/App";
 import { Button, SkeletonButton } from "@calcom/ui";
 import LicenseRequired from "@ee/components/LicenseRequired";
-
-import { trpc } from "@lib/trpc";
 
 import Shell from "@components/Shell";
 import Badge from "@components/ui/Badge";
@@ -147,6 +146,10 @@ const Component = ({
                     />
                   )}
                 </div>
+              ) : installedAppCount > 0 ? (
+                <Button color="secondary" disabled title="App already installed">
+                  {t("installed")}
+                </Button>
               ) : (
                 <InstallAppButton
                   type={type}
@@ -172,10 +175,88 @@ const Component = ({
               <SkeletonButton width="24" height="10" />
             )}
             {price !== 0 && (
-              <small className="block text-right">
-                {feeType === "usage-based" ? commission + "% + " + priceInDollar + "/booking" : priceInDollar}
-                {feeType === "monthly" && "/" + t("month")}
-              </small>
+              <div>
+                <small className="block text-right">
+                  {feeType === "usage-based"
+                    ? commission + "% + " + priceInDollar + "/booking"
+                    : priceInDollar}
+                  {feeType === "monthly" && "/" + t("month")}
+                </small>
+
+                <h4 className="mt-8 mb-2 font-medium text-gray-900 ">{t("learn_more")}</h4>
+                <ul className="prose -ml-1 -mr-1 text-xs leading-5">
+                  {docs && (
+                    <li>
+                      <a
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-blue-500 no-underline hover:underline"
+                        href={docs}>
+                        <BookOpenIcon className="mr-1 -mt-1 inline h-4 w-4" />
+                        {t("documentation")}
+                      </a>
+                    </li>
+                  )}
+                  {website && (
+                    <li>
+                      <a
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-blue-500 no-underline hover:underline"
+                        href={website}>
+                        <ExternalLinkIcon className="mr-1 -mt-px inline h-4 w-4" />
+                        {website.replace("https://", "")}
+                      </a>
+                    </li>
+                  )}
+                  {email && (
+                    <li>
+                      <a
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-blue-500 no-underline hover:underline"
+                        href={"mailto:" + email}>
+                        <MailIcon className="mr-1 -mt-px inline h-4 w-4" />
+                        {email}
+                      </a>
+                    </li>
+                  )}
+                  {tos && (
+                    <li>
+                      <a
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-blue-500 no-underline hover:underline"
+                        href={tos}>
+                        <DocumentTextIcon className="mr-1 -mt-px inline h-4 w-4" />
+                        {t("terms_of_service")}
+                      </a>
+                    </li>
+                  )}
+                  {privacy && (
+                    <li>
+                      <a
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-blue-500 no-underline hover:underline"
+                        href={privacy}>
+                        <ShieldCheckIcon className="mr-1 -mt-px inline h-4 w-4" />
+                        {t("privacy_policy")}
+                      </a>
+                    </li>
+                  )}
+                </ul>
+                <hr className="my-6" />
+                <small className="leading-1 block text-gray-500">
+                  Every app published on the DBee Calendar App Store is open source and thoroughly tested via
+                  peer reviews. Nevertheless, DBee Calendar, Inc. does not endorse or certify these apps
+                  unless they are published by DBee Calendar. If you encounter inappropriate content or
+                  behaviour please report it.
+                </small>
+                <a className="mt-2 block text-xs text-red-500" href="mailto:service@dbeedata.com">
+                  <FlagIcon className="inline h-3 w-3" /> Report App
+                </a>
+              </div>
             )}
           </div>
         </div>
