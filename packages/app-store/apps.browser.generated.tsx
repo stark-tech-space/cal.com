@@ -7,6 +7,7 @@ import { metadata as applecalendar_meta } from "./applecalendar/_metadata";
 import { metadata as around_meta } from "./around/_metadata";
 import { metadata as caldavcalendar_meta } from "./caldavcalendar/_metadata";
 import { metadata as dailyvideo_meta } from "./dailyvideo/_metadata";
+import { metadata as dbee_data_meta } from "./dbee_data/_metadata";
 import { metadata as routing_forms_meta } from "./ee/routing_forms/_metadata";
 import { metadata as exchange2013calendar_meta } from "./exchange2013calendar/_metadata";
 import { metadata as exchange2016calendar_meta } from "./exchange2016calendar/_metadata";
@@ -33,6 +34,7 @@ applecalendar:applecalendar_meta,
 around:around_meta,
 caldavcalendar:caldavcalendar_meta,
 dailyvideo:dailyvideo_meta,
+dbee_data:dbee_data_meta,
 routing_forms:routing_forms_meta,
 exchange2013calendar:exchange2013calendar_meta,
 exchange2016calendar:exchange2016calendar_meta,
@@ -58,6 +60,7 @@ zoomvideo:zoomvideo_meta,
 const applecalendar_installAppButton = dynamic(() =>import("./applecalendar/components/InstallAppButton"));
 const around_installAppButton = dynamic(() =>import("./around/components/InstallAppButton"));
 const caldavcalendar_installAppButton = dynamic(() =>import("./caldavcalendar/components/InstallAppButton"));
+const dbee_data_installAppButton = dynamic(() =>import("./dbee_data/components/InstallAppButton"));
 const exchange2013calendar_installAppButton = dynamic(() =>import("./exchange2013calendar/components/InstallAppButton"));
 const exchange2016calendar_installAppButton = dynamic(() =>import("./exchange2016calendar/components/InstallAppButton"));
 const giphy_installAppButton = dynamic(() =>import("./giphy/components/InstallAppButton"));
@@ -81,6 +84,7 @@ export const InstallAppButtonMap = {
 applecalendar:applecalendar_installAppButton,
 around:around_installAppButton,
 caldavcalendar:caldavcalendar_installAppButton,
+dbee_data:dbee_data_installAppButton,
 exchange2013calendar:exchange2013calendar_installAppButton,
 exchange2016calendar:exchange2016calendar_installAppButton,
 giphy:giphy_installAppButton,
