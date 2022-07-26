@@ -6,9 +6,11 @@
   "main": "./index.ts",
   "description": "Integrates Cal to DBee Data",
   "dependencies": {
-    "@calcom/lib": "*"
+    "@calcom/lib": "*",
+    "cors": "^2.8.5"
   },
   "devDependencies": {
-    "@calcom/types": "*"
+    "@calcom/types": "*",
+    "@types/cors": "^2.8.12"
   }
 }
