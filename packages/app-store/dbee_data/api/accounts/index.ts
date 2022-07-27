@@ -7,6 +7,8 @@ import userDelete from './userDelete'
 import userCreate from "./userCreate";
 import bookingCreate from './doctors/bookingCreate'
 
+import doctors from "./doctors/index";
+
 const app = express();
 
 const baseUrl = '/api/integrations/dbee_data/accounts'
@@ -18,35 +20,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   app.delete(`${baseUrl}/:accountId/user`, userDelete)
 
-  app.put(`${baseUrl}/:accountId/doctors/:doctorId/schedule`, scheduleUpdate)
-
-  app.post(`${baseUrl}/:accountId/doctors/:doctorId/bookings`, bookingCreate)
-
-  app.get(`${baseUrl}/:accountId/doctors/:doctorId/schedule`, (req, res) => {
-
-    res.send('/:accountId/doctors/:doctorId/schedule')
-  })
-
   app.get(`${baseUrl}/:accountId/bookings`, (req, res) => {
 
     res.send('/:accountId/bookings')
   })
 
-  app.get(`${baseUrl}/:accountId/doctors/:doctorId/bookings`, (req, res) => {
-
-    res.send('/:accountId/doctors/:doctorId/bookings')
-  })
-
-  app.get(`${baseUrl}/:accountId/doctors/:doctorId/treatments`, (req, res) => {
-
-    res.send('/:accountId/doctors/:doctorId/treatments')
-  })
-
-  app.get(`${baseUrl}/:accountId/doctors`, (req, res) => {
-
-    res.send('/:accountId/doctors')
-  })
-
+  app.use(`${baseUrl}/:accountId/doctors/:doctorId`, doctors)
 
   app(req, res);
 
