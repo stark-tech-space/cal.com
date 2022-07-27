@@ -1,14 +1,13 @@
 import express, { Request, Response } from 'express';
 import doctors from './doctors';
+import create from "./accounts/create";
+
 const router = express.Router();
 
 /**
  * create user
  */
-router.post('/user', (req: Request, res: Response) => {
-  const { accountId } = req.params
-  res.send('post user')
-})
+router.post('/user', create)
 
 /**
  * delete user
