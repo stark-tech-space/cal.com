@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "private": true,
+  "name": "@calcom/dbee_data",
+  "version": "0.0.0",
+  "main": "./index.ts",
+  "description": "Integrates Cal to DBee Data",
+  "dependencies": {
+    "@calcom/lib": "*",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "@calcom/types": "*",
+    "@types/cors": "^2.8.12"
+  }
+}

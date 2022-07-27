@@ -1,0 +1,16 @@
+{
+  "/*": "Don't modify slug - If required, do it using cli edit command",
+  "name": "DBee Data",
+  "title": "DBee Data",
+  "slug": "dbee_data",
+  "type": "dbee_data_calendar",
+  "imageSrc": "/api/app-store/dbee_data/icon.svg",
+  "logo": "/api/app-store/dbee_data/icon.svg",
+  "url": "https://cal.com/apps/dbee_data",
+  "variant": "calendar",
+  "categories": ["calendar"],
+  "publisher": "DBee Data",
+  "email": "service@dbeedata.com",
+  "description": "Integrates Cal to DBee Data",
+  "__createdUsingCli": true
+}
