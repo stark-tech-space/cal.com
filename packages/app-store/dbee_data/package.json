@@ -7,10 +7,12 @@
   "description": "Integrates Cal to DBee Data",
   "dependencies": {
     "@calcom/lib": "*",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "date-fns": "^2.29.1"
   },
   "devDependencies": {
     "@calcom/types": "*",
-    "@types/cors": "^2.8.12"
+    "@types/cors": "^2.8.12",
+    "helmet": "^5.1.1"
   }
 }
