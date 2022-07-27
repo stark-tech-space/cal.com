@@ -20,6 +20,7 @@ import * as vital from "./vital";
 import * as wipemycalother from "./wipemycalother";
 import * as zapier from "./zapier";
 import * as zoomvideo from "./zoomvideo";
+import * as dbee_data from "./dbee_data"
 
 const appStore = {
   //   example,
@@ -44,6 +45,7 @@ const appStore = {
   zapier,
   exchange2013calendar,
   exchange2016calendar,
+  dbee_data
 };
 
 export default appStore;
