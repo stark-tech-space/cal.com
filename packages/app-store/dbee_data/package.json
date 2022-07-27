@@ -11,6 +11,7 @@
   },
   "devDependencies": {
     "@calcom/types": "*",
-    "@types/cors": "^2.8.12"
+    "@types/cors": "^2.8.12",
+    "helmet": "^5.1.1"
   }
 }
