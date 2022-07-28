@@ -3,7 +3,6 @@ import prisma from "@calcom/prisma";
 import doctors from './doctors';
 import bookings from './bookings';
 import create from "./accounts/create";
-import prisma from "@calcom/prisma";
 import { deleteDoctorCalEventype } from "../utils/index"
 
 const router = express.Router();
