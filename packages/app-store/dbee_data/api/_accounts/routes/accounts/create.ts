@@ -33,7 +33,7 @@ export default async (req: Request, res: Response) => {
   // create event type and others
   if (data.availabilities) {
     // Initialize doctor in cal schedule, eventype
-    await initDoctorCalSchedule(data.availabilities, user.id, accountId, data.name, data.doctorId)
+    await initDoctorCalSchedule(data.availabilities, user.id, accountId, data.doctorId)
   }
 
   res.status(200).json({ user, apiKey })
