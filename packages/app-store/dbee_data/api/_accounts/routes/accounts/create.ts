@@ -9,7 +9,9 @@ export default async (req: Request, res: Response) => {
   // if (!isAdmin) throw new HttpError({ statusCode: 401, message: "You are not authorized" });
 
   const data: Doctor = req.body;
-  const { accountId } = req.params
+  const query: any = req.query
+
+  const accountId: string = query.args[2]
 
   const user = await prisma.user.create({
     data: {

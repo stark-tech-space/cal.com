@@ -1,10 +1,9 @@
 import express, { Request, Response } from 'express';
 import prisma from "@calcom/prisma";
-import { hashAPIKey } from "@calcom/ee/lib/api/apiKeys";
-import { initDoctorCalSchedule, getRandomString } from "../utils/index"
+import { initDoctorCalSchedule } from "../utils/index"
 import { Availability } from '../types/doctor'
 import { WeekDay } from '../types/common';
-import findValidApiKey from "@calcom/ee/lib/api/findValidApiKey";
+import apiKeyValid from '../../middleware/apiKeyValid'
 
 const indexRouter = express.Router();
 const router = express.Router();
@@ -19,27 +18,17 @@ router.get(`/treatments`, (req: Request, res: Response) => {
   res.send('/:accountId/doctors/:doctorId/treatments')
 })
 
-router.put('/schedule', async (req: Request, res: Response) => {
-  const apiKey = req.query.apiKey as string;
-
-  if (!apiKey) {
-    return res.status(401).json({ message: "No API key provided" });
-  }
-
-  const validKey = await findValidApiKey(apiKey);
-
-  if (!validKey) {
-    return res.status(401).json({ message: "API key not valid" });
-  }
-
+router.put('/schedule', apiKeyValid, async (req: Request, res: Response) => {
   const data: Record<WeekDay, Array<Availability>> = req.body;
 
   const query: any = req.query
 
+  const { userId } = query
+
   const accountId: string = query.args[2]
   const doctorId: string = query.args[4]
 
-  await initDoctorCalSchedule(data, validKey.userId, accountId, doctorId)
+  await initDoctorCalSchedule(data, userId, accountId, doctorId)
 
   res.status(200).json({ success: 1 })
 })
@@ -49,19 +38,8 @@ router.post(`/bookings`, (req: Request, res: Response) => {
 })
 
 router.get(`/schedule`, async (req: Request, res: Response) => {
-  const query: any = req.query
 
-  const { apiKey, eventTypeId } = req.query;
-
-  if (!apiKey) {
-    return res.status(401).json({ message: "No API key provided" });
-  }
-
-  const validKey = await findValidApiKey(apiKey as string);
-
-  if (!validKey) {
-    return res.status(401).json({ message: "API key not valid" });
-  }
+  const { eventTypeId } = req.query;
 
   const schedule = await prisma.eventType.findUnique({ where: { id: Number(eventTypeId) } }).schedule().availability()
 
