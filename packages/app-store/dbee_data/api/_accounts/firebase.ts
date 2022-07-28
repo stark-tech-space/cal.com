@@ -4,9 +4,9 @@ import firebase from 'firebase-admin';
 if (firebase.apps.length === 0) {
   firebase.initializeApp({
     credential: firebase.credential.cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+      projectId: process.env.DBEE_FIREBASE_PROJECT_ID,
+      clientEmail: process.env.DBEE_FIREBASE_CLIENT_EMAIL,
+      privateKey: process.env.DBEE_FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
     })
   });
 }

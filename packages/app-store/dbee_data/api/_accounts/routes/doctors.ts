@@ -3,7 +3,7 @@ import prisma from "@calcom/prisma";
 import { initDoctorCalSchedule } from "../utils/index"
 import { Availability } from '../types/doctor'
 import { WeekDay } from '../types/common';
-import useApiKey from '../../middleware/useApiKey'
+import useSecret from '../../middleware/useSecret'
 
 const indexRouter = express.Router();
 const router = express.Router();
@@ -18,7 +18,8 @@ router.get(`/treatments`, (req: Request, res: Response) => {
   res.send('/:accountId/doctors/:doctorId/treatments')
 })
 
-router.put('/schedule', useApiKey, async (req: Request, res: Response) => {
+//TODO: needs a name string
+router.put('/schedule', useSecret, async (req: Request, res: Response) => {
   const data: Record<WeekDay, Array<Availability>> = req.body;
 
   const { userId } = req.query
@@ -27,7 +28,7 @@ router.put('/schedule', useApiKey, async (req: Request, res: Response) => {
 
   await initDoctorCalSchedule(data, userId, accountId, doctorId)
 
-  res.status(200).json({ success: 1 })
+  res.status(200).json({ success: true })
 })
 
 router.post(`/bookings`, (req: Request, res: Response) => {
@@ -40,7 +41,7 @@ router.get(`/schedule`, async (req: Request, res: Response) => {
 
   const schedule = await prisma.eventType.findUnique({ where: { id: Number(eventTypeId) } }).schedule().availability()
 
-  res.json({ schedule })
+  res.json(schedule)
 })
 
 export default indexRouter;
