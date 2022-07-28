@@ -1,5 +1,7 @@
 import express, { Request, Response } from 'express';
+import prisma from "@calcom/prisma";
 import doctors from './doctors';
+import bookings from './bookings';
 import create from "./accounts/create";
 
 const router = express.Router();
@@ -14,14 +16,13 @@ router.post('/user', create)
  */
 router.delete('/user', (req: Request, res: Response) => {
   const { accountId } = req.params
-  res.send('delete user')
+
 })
 
 /**
  * get bookings
  */
-router.get('/bookings`', (req: Request, res: Response) => {
-  const { accountId } = res.locals;
+router.get('/bookings`', async (req: Request, res: Response) => {
   res.send('get bookings')
 })
 
@@ -30,4 +31,8 @@ router.get('/bookings`', (req: Request, res: Response) => {
  */
 router.use('/doctors', doctors);
 
+/**
+ * bookings routes
+ */
+router.use('/bookings', bookings);
 export default router;
