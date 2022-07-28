@@ -19,7 +19,7 @@ router.get(`/treatments`, (req: Request, res: Response) => {
   res.send('/:accountId/doctors/:doctorId/treatments')
 })
 
-router.put('/:doctorId/schedule', async (req: Request, res: Response) => {
+router.put('/schedule', async (req: Request, res: Response) => {
   const apiKey = req.query.apiKey as string;
 
   if (!apiKey) {
@@ -48,8 +48,24 @@ router.post(`/bookings`, (req: Request, res: Response) => {
   res.send('booking create')
 })
 
-router.get(`/schedule`, (req: Request, res: Response) => {
-  res.send('/:accountId/doctors/:doctorId/schedule')
+router.get(`/schedule`, async (req: Request, res: Response) => {
+  const query: any = req.query
+
+  const { apiKey, eventTypeId } = req.query;
+
+  if (!apiKey) {
+    return res.status(401).json({ message: "No API key provided" });
+  }
+
+  const validKey = await findValidApiKey(apiKey as string);
+
+  if (!validKey) {
+    return res.status(401).json({ message: "API key not valid" });
+  }
+
+  const schedule = await prisma.eventType.findUnique({ where: { id: Number(eventTypeId) } }).schedule().availability()
+
+  res.json({ schedule })
 })
 
-export default router;
+export default indexRouter;

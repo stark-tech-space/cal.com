@@ -18,7 +18,8 @@ export default async (req: Request, res: Response) => {
       timeZone: 'Asia/Taipei',
       username: data.doctorId.toLowerCase(),
       metadata: {
-        accountId: accountId
+        accountId: accountId,
+        doctorId: data.doctorId
       }
     }
   });
