@@ -424,6 +424,9 @@ Next make sure you have your app running `yarn dx`. Then in the slack chat type 
 1. Select all events for the webhook you interested, e.g. `sleep_created`
 1. Copy the webhook secret (`sec...`) to `VITAL_WEBHOOK_SECRET` in the .env.appStore file.
 
+### DBee Data Env
+firebase admin service credentials
+
 ## Workflows
 
 ### Setting up SendGrid for Email reminders
