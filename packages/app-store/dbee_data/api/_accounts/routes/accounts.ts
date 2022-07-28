@@ -1,5 +1,7 @@
 import express, { Request, Response } from 'express';
+import prisma from "@calcom/prisma";
 import doctors from './doctors';
+import bookings from './bookings';
 import create from "./accounts/create";
 import prisma from "@calcom/prisma";
 import { deleteDoctorCalEventype } from "../utils/index"
@@ -38,8 +40,7 @@ router.delete('/user', async (req: Request, res: Response) => {
 /**
  * get bookings
  */
-router.get('/bookings`', (req: Request, res: Response) => {
-  const { accountId } = res.locals;
+router.get('/bookings`', async (req: Request, res: Response) => {
   res.send('get bookings')
 })
 
@@ -48,4 +49,8 @@ router.get('/bookings`', (req: Request, res: Response) => {
  */
 router.use('/doctors', doctors);
 
+/**
+ * bookings routes
+ */
+router.use('/bookings', bookings);
 export default router;
