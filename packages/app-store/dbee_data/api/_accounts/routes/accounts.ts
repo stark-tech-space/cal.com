@@ -21,6 +21,7 @@ router.delete('/user', (req: Request, res: Response) => {
  * get bookings
  */
 router.get('/bookings`', (req: Request, res: Response) => {
+  const { accountId } = res.locals;
   res.send('get bookings')
 })
 
