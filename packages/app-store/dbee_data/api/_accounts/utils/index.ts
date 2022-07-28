@@ -1,9 +1,8 @@
 import { WeekDay, weekDayList } from '../types/common';
 import { Availability, Treatment } from '../types/doctor';
 import { CalScheduleCreateRequest, CalAvailabilityCreateRequest } from '../types/cal/schedule'
-import { CreateEventTypeResponse } from '../types/cal/evenType'
 import prisma from "@calcom/prisma";
-
+import { EventType } from "@calcom/prisma/client";
 import startOfDay from 'date-fns/startOfDay';
 import add from 'date-fns/add'
 import groupBy from 'lodash/fp/groupBy'
@@ -105,7 +104,7 @@ export async function updateDoctorCalEventype(availabilities: Record<WeekDay, Ar
       select: { eventTypes: true },
     })
 
-  const allEventype: any = data.eventTypes
+  const allEventype = data.eventTypes
 
   let result: any = []
   await Promise.all(Object.entries(treatmentGroup).map(async ([id, treatment]) => {
@@ -154,7 +153,7 @@ export async function updateDoctorCalEventype(availabilities: Record<WeekDay, Ar
   return result
 }
 
-export async function deleteDoctorCalEventype(eventypes: Array<CreateEventTypeResponse>, userId: any, deleteAll?: boolean) {
+export async function deleteDoctorCalEventype(eventypes: Array<EventType>, userId: any, deleteAll?: boolean) {
 
   const task: any = [];
 
