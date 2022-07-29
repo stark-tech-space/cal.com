@@ -7,7 +7,7 @@ import { Request, Response } from 'express';
  */
 const useSecret = async (req: Request, res: Response, next: () => void) => {
   const secret = req.header('authorization')?.split(' ')[1] || '';
-  const isAuth = await bcrypt.compare(secret, process.env.DBEE_AUTH_SECRET || '');
+  const isAuth = await bcrypt.compare(secret, process.env.DBEE_SECRET_HASH || '');
   if (!isAuth) {
     res.sendStatus(401);
     return;
