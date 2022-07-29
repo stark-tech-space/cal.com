@@ -49,12 +49,20 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const [appName, apiEndpoint] = args;
+
+  console.log("===========appName", appName);
+
   try {
     /* Absolute path didn't work */
     const handlerMap = (await import("@calcom/app-store/apps.server.generated")).apiHandlers;
 
+    console.log("========handlerMap", handlerMap);
+
     const handlerKey = deriveAppDictKeyFromType(appName, handlerMap);
     const handlers = await handlerMap[handlerKey as keyof typeof handlerMap];
+
+    console.log("===========[...args]apiEndpoint", apiEndpoint, handlers);
+
     const handler = handlers[apiEndpoint as keyof typeof handlers] as AppHandler;
     let redirectUrl = "/apps/installed";
     if (typeof handler === "undefined")
