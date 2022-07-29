@@ -5,6 +5,9 @@ import helmet from 'helmet';
 // Routes
 import accounts from './routes/accounts';
 
+// Middleware
+import usePathParams from '../middleware/usePathParams';
+
 const baseUrl = '/api/integrations/dbee_data';
 
 const app = express();
@@ -18,6 +21,7 @@ baseRouter.use('/accounts/:accountId', accounts)
 app.use(cors());
 app.use(helmet({ crossOriginResourcePolicy: true }));
 // app.use(express.json());
-app.use(baseUrl,baseRouter);
+app.use(usePathParams);
+app.use(baseUrl, baseRouter);
 
 export default app;

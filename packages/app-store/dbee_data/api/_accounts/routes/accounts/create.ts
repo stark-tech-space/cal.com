@@ -9,7 +9,8 @@ export default async (req: Request, res: Response) => {
   // if (!isAdmin) throw new HttpError({ statusCode: 401, message: "You are not authorized" });
 
   const data: Doctor = req.body;
-  const { accountId } = req.params
+
+  const { accountId } = res.locals
 
   const user = await prisma.user.create({
     data: {
@@ -18,7 +19,8 @@ export default async (req: Request, res: Response) => {
       timeZone: 'Asia/Taipei',
       username: data.doctorId.toLowerCase(),
       metadata: {
-        accountId: accountId
+        accountId: accountId,
+        doctorId: data.doctorId
       }
     }
   });
@@ -33,7 +35,7 @@ export default async (req: Request, res: Response) => {
   // create event type and others
   if (data.availabilities) {
     // Initialize doctor in cal schedule, eventype
-    await initDoctorCalSchedule(data.availabilities, user.id, accountId, data.name, data.doctorId)
+    await initDoctorCalSchedule(data.availabilities, user.id, accountId, data.doctorId)
   }
 
   res.status(200).json({ user, apiKey })

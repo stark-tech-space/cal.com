@@ -1,9 +1,8 @@
 import { WeekDay, weekDayList } from '../types/common';
 import { Availability, Treatment } from '../types/doctor';
 import { CalScheduleCreateRequest, CalAvailabilityCreateRequest } from '../types/cal/schedule'
-import { CreateEventTypeResponse } from '../types/cal/evenType'
 import prisma from "@calcom/prisma";
-
+import { EventType } from "@calcom/prisma/client";
 import startOfDay from 'date-fns/startOfDay';
 import add from 'date-fns/add'
 import groupBy from 'lodash/fp/groupBy'
@@ -105,7 +104,7 @@ export async function updateDoctorCalEventype(availabilities: Record<WeekDay, Ar
       select: { eventTypes: true },
     })
 
-  const allEventype: any = data.eventTypes
+  const allEventype = data.eventTypes
 
   let result: any = []
   await Promise.all(Object.entries(treatmentGroup).map(async ([id, treatment]) => {
@@ -154,49 +153,51 @@ export async function updateDoctorCalEventype(availabilities: Record<WeekDay, Ar
   return result
 }
 
-export async function deleteDoctorCalEventype(eventypes: Array<CreateEventTypeResponse>, userId: any, deleteAll?: boolean) {
+export async function deleteDoctorCalEventype(eventypes: Array<EventType>, userId: any, deleteAll?: boolean) {
+
+  const task: any = [];
 
   Promise.all(eventypes.map(async (eventype) => {
-    await prisma.eventType.delete({ where: { id: eventype.id } })
+    task.push(prisma.eventType.delete({ where: { id: eventype.id } }))
+  }))
 
-    if (deleteAll) {
-      const task: any = [];
-      // delete schedule
-      const data = await prisma.schedule.findMany({ where: { userId } });
+  if (deleteAll) {
 
-      data.forEach(async (schedule) => {
-        // Look for user to check if schedule is user's default
-        const user = await prisma.user.findUnique({ where: { id: userId } });
-        if (user) {
-          if (user.defaultScheduleId === schedule.id) {
-            // unset default
-            await prisma.user.update({
-              where: {
-                id: userId,
-              },
-              data: {
-                defaultScheduleId: undefined,
-              },
-            });
-          }
-          task.push(prisma.schedule.delete({ where: { id: schedule.id } }));
-        }
+    // delete schedule
+    const data = await prisma.schedule.findMany({ where: { userId } });
+
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+
+    // Look for user to check if schedule is user's default
+    if (user) {
+      // unset default
+      await prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          defaultScheduleId: undefined,
+        },
       });
 
-      // delete availabilities
-      const availabilities = await prisma.availability.findMany({ where: { userId } });
-      availabilities.forEach((availability) => {
-        task.push(prisma.availability.delete({ where: { id: availability.id } }));
-      });
-
-      await Promise.all(task);
     }
 
-  }))
+    data.map(async (schedule) => {
+      task.push(prisma.schedule.delete({ where: { id: schedule.id } }));
+    })
+
+    // delete availabilities
+    const availabilities = await prisma.availability.findMany({ where: { userId } });
+    availabilities.forEach((availability) => {
+      task.push(prisma.availability.delete({ where: { id: availability.id } }));
+    });
+
+    await Promise.all(task);
+  }
 
 }
 
-export async function initDoctorCalSchedule(availabilities: Record<WeekDay, Array<Availability>>, userId: any, accountId: string, name: string, doctorId: string) {
+export async function initDoctorCalSchedule(availabilities: Record<WeekDay, Array<Availability>>, userId: any, accountId: string, doctorId: string) {
   try {
     // Update eventype before creating the user's schedule
     const treatmentList = await updateDoctorCalEventype(availabilities, userId, doctorId)
@@ -215,7 +216,7 @@ export async function initDoctorCalSchedule(availabilities: Record<WeekDay, Arra
 
     await Promise.all(task)
   } catch (err) {
-    console.error(`initDoctorCalSchedule accountId:${accountId} name: ${name} error`, err);
+    console.error(`initDoctorCalSchedule accountId:${accountId} doctorId: ${doctorId} error`, err);
   }
 }
 

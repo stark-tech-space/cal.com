@@ -7,13 +7,16 @@
   "description": "Integrates Cal to DBee Data",
   "dependencies": {
     "@calcom/lib": "*",
+    "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "date-fns": "^2.29.1",
-    "firebase-admin": "^11.0.0"
+    "express": "^4.18.1",
+    "firebase-admin": "^11.0.0",
+    "helmet": "^5.1.1"
   },
   "devDependencies": {
     "@calcom/types": "*",
-    "@types/cors": "^2.8.12",
-    "helmet": "^5.1.1"
+    "@types/bcrypt": "^5.0.0",
+    "@types/cors": "^2.8.12"
   }
 }
