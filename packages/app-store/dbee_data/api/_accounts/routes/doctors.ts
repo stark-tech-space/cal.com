@@ -50,7 +50,7 @@ router.get(`/treatments`, async (req: Request, res: Response) => {
           }
         ]
 
-      }, rejectOnNotFound: true,
+      }, rejectOnNotFound: false,
       select: { eventTypes: true },
     })
 
