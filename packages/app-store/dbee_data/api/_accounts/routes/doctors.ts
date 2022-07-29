@@ -83,6 +83,8 @@ router.post(`/bookings`, (req: Request, res: Response) => {
 
 router.get(`/schedule`, async (req: Request, res: Response) => {
 
+  console.log('===============')
+
   const { eventTypeId, start, end, duration, bookingStartMinsModulus } = req.query;
 
   const schedule = await prisma.eventType.findUnique({ where: { id: Number(eventTypeId) } }).schedule().availability()
@@ -93,6 +95,8 @@ router.get(`/schedule`, async (req: Request, res: Response) => {
     Number(duration),
     Number(bookingStartMinsModulus),
     schedule)
+  
+    console.log(result)
 
   res.json(result)
 })

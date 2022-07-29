@@ -10,8 +10,6 @@ if (firebase.apps.length === 0) {
   });
 }
 
-console.log('firebase.apps.length', firebase.apps.length);
-
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 
