@@ -54,7 +54,7 @@ router.get(`/treatments`, async (req: Request, res: Response) => {
       select: { eventTypes: true },
     })
 
-  res.json(eventTypes)
+  res.json(eventTypes == null ? [] : eventTypes);
 })
 
 //TODO: needs a name string
@@ -95,7 +95,7 @@ router.get(`/schedule`, async (req: Request, res: Response) => {
     Number(duration),
     Number(bookingStartMinsModulus),
     schedule)
-  
+
     console.log(result)
 
   res.json(result)
