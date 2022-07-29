@@ -20,6 +20,7 @@ import {
   WeekDayTrans,
 } from '../types/schedule';
 
+import { Availability } from "@calcom/prisma/client";
 import range from 'lodash/range';
 
 const convertTime = (dateString: string) => {
@@ -55,7 +56,7 @@ export const convertSchedule = async (
   end: any,
   duration: number,
   bookingStartMinsModulus: number,
-  schedule: any,
+  schedule: Availability[],
 ) => {
   const startISODate = parseISO(start);
   const endISODate = parseISO(end);
