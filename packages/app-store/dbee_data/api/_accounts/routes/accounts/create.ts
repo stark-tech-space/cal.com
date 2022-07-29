@@ -15,7 +15,7 @@ export default async (req: Request, res: Response) => {
   const user = await prisma.user.create({
     data: {
       name: data.name,
-      email: data.email,
+      email: `${data.doctorId.toLowerCase()}@dbee.com`,
       timeZone: 'Asia/Taipei',
       username: data.doctorId.toLowerCase(),
       metadata: {
