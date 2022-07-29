@@ -1,10 +1,10 @@
 import express, { Request, Response } from 'express';
 import prisma from "@calcom/prisma";
 import { initDoctorCalSchedule } from "../utils/index"
+import { convertSchedule } from "../utils/schedule"
 import { Availability } from '../types/doctor'
 import { WeekDay } from '../types/common';
 import useSecret from '../../middleware/useSecret'
-import useApiKey from '../../middleware/useApiKey'
 
 const indexRouter = express.Router();
 const router = express.Router();
@@ -22,7 +22,7 @@ indexRouter.get(`/`, async (req: Request, res: Response) => {
     }
   })
 
-  res.send('/:accountId/doctors')
+  res.json(users)
 })
 
 indexRouter.use('/:doctorId', router);
@@ -48,7 +48,7 @@ router.get(`/treatments`, async (req: Request, res: Response) => {
             }
           }
         ]
-        
+
       }, rejectOnNotFound: true,
       select: { eventTypes: true },
     })
@@ -57,7 +57,7 @@ router.get(`/treatments`, async (req: Request, res: Response) => {
 })
 
 //TODO: needs a name string
-router.put('/schedule', useSecret, useApiKey, async (req: Request, res: Response) => {
+router.put('/schedule', useSecret, async (req: Request, res: Response) => {
   const data: Record<WeekDay, Array<Availability>> = req.body;
 
   const { userId } = req.query
@@ -75,11 +75,18 @@ router.post(`/bookings`, (req: Request, res: Response) => {
 
 router.get(`/schedule`, async (req: Request, res: Response) => {
 
-  const { eventTypeId } = req.query;
+  const { eventTypeId, start, end, duration, bookingStartMinsModulus } = req.query;
 
   const schedule = await prisma.eventType.findUnique({ where: { id: Number(eventTypeId) } }).schedule().availability()
 
-  res.json(schedule)
+  const result = await convertSchedule(
+    start,
+    end,
+    Number(duration),
+    Number(bookingStartMinsModulus),
+    schedule)
+
+  res.json(result)
 })
 
 export default indexRouter;
