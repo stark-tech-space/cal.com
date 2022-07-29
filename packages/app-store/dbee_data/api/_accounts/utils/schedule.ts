@@ -55,7 +55,7 @@ export const convertSchedule = async (
   end: any,
   duration: number,
   bookingStartMinsModulus: number,
-  schedule: Array<CalSchedule>,
+  schedule: any,
 ) => {
   const startISODate = parseISO(start);
   const endISODate = parseISO(end);
