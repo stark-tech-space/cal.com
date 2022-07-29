@@ -28,13 +28,13 @@ const convertTime = (dateString: string) => {
   return (getMinutes(date) + getHours(date) * 60)
 };
 
-export const convertAvailabilities = (schedule: Array<CalSchedule>) => {
+export const convertAvailabilities = (schedule: Array<Availability>) => {
   const availabilities: Record<string, AvailabilityItem[]> = {};
   for (const key in WeekDayTrans) {
     if (Number(key) || Number(key) == 0) {
       const scheduleItems = schedule.filter((c) => c.days[0] === parseInt(key));
 
-      const availabilityItems = scheduleItems.map((item: CalSchedule) => {
+      const availabilityItems = scheduleItems.map((item: Availability) => {
         const start = convertTime(new Date(item.startTime).toLocaleString())
         const end = convertTime(new Date(item.endTime).toLocaleString())
 

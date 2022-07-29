@@ -1,5 +1,4 @@
 import express, { Request, Response } from 'express';
-import prisma from "@calcom/prisma";
 import doctors from './doctors';
 import bookings from './bookings';
 import create from "./accounts/create";
