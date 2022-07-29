@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import prisma from "@calcom/prisma";
-import { firestore } from "dbee_data/api/_accounts/firebase";
+import { firestore } from "../firebase";
 
 const router = express.Router();
 
