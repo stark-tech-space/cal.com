@@ -5,6 +5,7 @@ import { convertSchedule } from "../utils/schedule"
 import { Availability } from '../types/doctor'
 import { WeekDay } from '../types/common';
 import useSecret from '../../middleware/useSecret'
+import { deleteDoctorCalEventype } from "../utils/index"
 
 const indexRouter = express.Router();
 const router = express.Router();
@@ -56,15 +57,22 @@ router.get(`/treatments`, async (req: Request, res: Response) => {
   res.json(eventTypes)
 })
 
-//TODO: needs a name string
+//TODO: needs a name string   
 router.put('/schedule', useSecret, async (req: Request, res: Response) => {
-  const data: Record<WeekDay, Array<Availability>> = req.body;
-
-  const { userId } = req.query
+  const data: Record<WeekDay, Array<Availability>> = req.body.weekly;
 
   const { accountId, doctorId } = res.locals
 
-  await initDoctorCalSchedule(data, userId, accountId, doctorId)
+  const user = await prisma.user.findFirst({
+    where: {
+      metadata: {
+        path: ['doctorId'],
+        equals: doctorId
+      }
+    }
+  })
+
+  await initDoctorCalSchedule(data, user.id, accountId, doctorId)
 
   res.status(200).json({ success: true })
 })
@@ -87,6 +95,38 @@ router.get(`/schedule`, async (req: Request, res: Response) => {
     schedule)
 
   res.json(result)
+})
+
+/**
+ * delete user
+ */
+router.delete('/user', async (req: Request, res: Response) => {
+
+  const { doctorId } = res.locals
+
+  const user = await prisma.user.findFirst({
+    where: {
+      metadata: {
+        path: ['doctorId'],
+        equals: doctorId
+      }
+    }
+  })
+
+  if (!user) res.status(404).json({ message: "User not found" });
+
+  const { eventTypes } = await prisma.user
+    .findUnique({
+      where: { id: user?.id },
+      rejectOnNotFound: true,
+      select: { eventTypes: true },
+    })
+
+  deleteDoctorCalEventype(eventTypes, user?.id, true)
+
+  await prisma.user.delete({ where: { id: user?.id } });
+
+  res.json({ success: 1 })
 })
 
 export default indexRouter;
