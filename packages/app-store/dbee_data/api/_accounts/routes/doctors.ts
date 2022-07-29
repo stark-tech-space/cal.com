@@ -4,6 +4,7 @@ import { initDoctorCalSchedule } from "../utils/index"
 import { Availability } from '../types/doctor'
 import { WeekDay } from '../types/common';
 import useSecret from '../../middleware/useSecret'
+import useApiKey from '../../middleware/useApiKey'
 
 const indexRouter = express.Router();
 const router = express.Router();
@@ -19,7 +20,7 @@ router.get(`/treatments`, (req: Request, res: Response) => {
 })
 
 //TODO: needs a name string
-router.put('/schedule', useSecret, async (req: Request, res: Response) => {
+router.put('/schedule', useSecret, useApiKey, async (req: Request, res: Response) => {
   const data: Record<WeekDay, Array<Availability>> = req.body;
 
   const { userId } = req.query
