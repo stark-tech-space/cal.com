@@ -9,14 +9,51 @@ import useApiKey from '../../middleware/useApiKey'
 const indexRouter = express.Router();
 const router = express.Router();
 
-indexRouter.get(`/`, (req: Request, res: Response) => {
+indexRouter.get(`/`, async (req: Request, res: Response) => {
+
+  const { accountId } = res.locals
+
+  const users = await prisma.user.findMany({
+    where: {
+      metadata: {
+        path: ['accountId'],
+        equals: accountId
+      }
+    }
+  })
+
   res.send('/:accountId/doctors')
 })
 
 indexRouter.use('/:doctorId', router);
 
-router.get(`/treatments`, (req: Request, res: Response) => {
-  res.send('/:accountId/doctors/:doctorId/treatments')
+router.get(`/treatments`, async (req: Request, res: Response) => {
+
+  const { accountId, doctorId } = res.locals
+
+  const eventTypes = await prisma.user
+    .findFirst({
+      where: {
+        AND: [
+          {
+            metadata: {
+              path: ['accountId'],
+              equals: accountId
+            }
+          },
+          {
+            metadata: {
+              path: ['doctorId'],
+              equals: doctorId
+            }
+          }
+        ]
+        
+      }, rejectOnNotFound: true,
+      select: { eventTypes: true },
+    })
+
+  res.json(eventTypes)
 })
 
 //TODO: needs a name string

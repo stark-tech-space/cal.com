@@ -37,13 +37,6 @@ router.delete('/user', async (req: Request, res: Response) => {
 })
 
 /**
- * get bookings
- */
-router.get('/bookings`', async (req: Request, res: Response) => {
-  res.send('get bookings')
-})
-
-/**
  * doctors routes
  */
 router.use('/doctors', doctors);
