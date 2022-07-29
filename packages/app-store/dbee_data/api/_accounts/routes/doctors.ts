@@ -57,7 +57,7 @@ router.get(`/treatments`, async (req: Request, res: Response) => {
   res.json(eventTypes)
 })
 
-//TODO: needs a name string   
+//TODO: needs a name string
 router.put('/schedule', useSecret, async (req: Request, res: Response) => {
   const data: Record<WeekDay, Array<Availability>> = req.body.weekly;
 
@@ -69,7 +69,7 @@ router.put('/schedule', useSecret, async (req: Request, res: Response) => {
         path: ['doctorId'],
         equals: doctorId
       }
-    }
+    }, rejectOnNotFound: true
   })
 
   await initDoctorCalSchedule(data, user.id, accountId, doctorId)
