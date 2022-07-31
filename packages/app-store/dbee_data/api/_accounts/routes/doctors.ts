@@ -58,7 +58,7 @@ router.get(`/treatments`, async (req: Request, res: Response) => {
       select: { eventTypes: true },
     })
 
-  res.json(eventTypes)
+  res.json(eventTypes == null ? [] : eventTypes);
 })
 
 //TODO: needs a name string
