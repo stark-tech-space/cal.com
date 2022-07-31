@@ -6,6 +6,10 @@ import { Availability } from '../types/doctor'
 import { WeekDay } from '../types/common';
 import useSecret from '../../middleware/useSecret'
 import { deleteDoctorCalEventype } from "../utils/index"
+import { firestore } from "../firebase";
+import { v4 as uuidv4 } from "uuid";
+import add from 'date-fns/add'
+import parseISO from 'date-fns/parseISO'
 
 const indexRouter = express.Router();
 const router = express.Router();
@@ -77,8 +81,47 @@ router.put('/schedule', useSecret, async (req: Request, res: Response) => {
   res.status(200).json({ success: true })
 })
 
-router.post(`/bookings`, (req: Request, res: Response) => {
-  res.send('booking create')
+router.post(`/bookings`, async (req: Request, res: Response) => {
+
+  // create booking
+
+  const data = req.body
+  const { doctorId, accountId } = res.locals
+
+  const user = await prisma.user.findFirst({
+    where: {
+      metadata: {
+        path: ['doctorId'],
+        equals: doctorId
+      }
+    }, rejectOnNotFound: true
+  })
+
+  // create firestore appointment
+  const appointmentDocRef = firestore.collection(`accounts/${accountId}/appointments`).doc();
+
+  await appointmentDocRef.set(data);
+
+  // need to check time zone
+  const booking = await prisma.booking.create({
+    data: {
+      eventTypeId: Number(data.eventTypeId),
+      title: data.treatment.name,
+      startTime: data.start,
+      endTime: add(parseISO(data.start), {
+        minutes: data.treatment.duration,
+      }),
+      userId: user.id,
+      uid: uuidv4(),
+      customInputs: {
+        appointment: appointmentDocRef.id,
+        patientId: data.patientId
+      }
+    }
+  });
+
+  res.json({ booking, appointment: appointmentDocRef.id })
+
 })
 
 router.get(`/schedule`, async (req: Request, res: Response) => {
