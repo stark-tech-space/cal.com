@@ -1,24 +1,20 @@
 import express, { Request, Response } from 'express';
 import prisma from "@calcom/prisma";
-import { initDoctorCalSchedule } from "../utils/index"
+import { initDoctorCalSchedule, generateSeatNumber } from "../utils/index"
 import { convertSchedule } from "../utils/schedule"
 import { Availability } from '../types/doctor'
 import { WeekDay } from '../types/common';
 import useSecret from '../../middleware/useSecret'
 import { deleteDoctorCalEventype } from "../utils/index"
-import { firestore } from "../firebase";
 import { v4 as uuidv4 } from "uuid";
-import add from 'date-fns/add'
-import parseISO from 'date-fns/parseISO'
-import { AccountWithId } from '../types/account';
 import { CreateAppointmentRequest } from '../types/appointment'
-import isValid from 'date-fns/isValid';
-import isAfter from 'date-fns/isAfter';
 import { createTreatmentAppointment } from '../utils/appointment'
+import { BookingPayload, triggerEventTypes } from '../types/booking'
 
+import { parseISO, add, isValid, isAfter } from 'date-fns';
+import { PatientField } from '../types/patient';
 const indexRouter = express.Router();
 const router = express.Router();
-
 enum ErrorCode {
   INVALID_TIME = 'INVALID_TIME',
   NO_OPD_TIME = 'NO_OPD_TIME',
@@ -27,6 +23,30 @@ enum ErrorCode {
   INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR',
 }
 
+type Event = {
+  calId: number; // eventTypeId on Cal
+  calDoctorId: number; // userId on Cal
+  doctorId: string;
+  doctorName: string;
+  treatmentId: string;
+  treatmentName: string; // event title. what shows up on Cal appointment
+  duration: number;
+  formId: string;
+  isPublic: boolean;
+  maxSeats: number;
+};
+type Field = {
+  id: string; // field uniq id,
+  name: string; // field name
+  isRequired: true; // is field required
+};
+
+enum AvailabilityType {
+  OPD = 'OPD', // 門診
+  TREATMENT = 'TREATMENT', // 療程
+}
+
+export type FilledFormField = Field & { value: string | boolean };
 
 indexRouter.get(`/`, async (req: Request, res: Response) => {
 
@@ -112,10 +132,6 @@ router.post(`/bookings`, async (req: Request, res: Response) => {
   })
 
   // create firestore appointment
-  // const appointmentDocRef = firestore.collection(`accounts/${accountId}/appointments`).doc();
-
-  // await appointmentDocRef.set(data);
-
   const account = { id: accountId }
   const { patientId, start, treatment, fields, basicFields, note } =
     req.body as CreateAppointmentRequest;
@@ -128,19 +144,6 @@ router.post(`/bookings`, async (req: Request, res: Response) => {
     return;
   }
 
-  let appointmentId = '';
-  appointmentId = await createTreatmentAppointment({
-    account,
-    doctorId,
-    patientId,
-    treatment,
-    startISODate,
-    basicFields,
-    fields,
-    note,
-  });
-
-
   // need to check time zone
   const booking = await prisma.booking.create({
     data: {
@@ -151,14 +154,35 @@ router.post(`/bookings`, async (req: Request, res: Response) => {
         minutes: data.treatment.duration,
       }),
       userId: user.id,
-      uid: uuidv4(),
+      uid: uuidv4()
+    }
+  });
+
+  let appointmentId = '';
+  appointmentId = await createTreatmentAppointment({
+    account,
+    doctorId,
+    patientId,
+    treatment,
+    startISODate,
+    basicFields,
+    fields,
+    note,
+    bookingId: Number(booking.id)
+  });
+
+  await prisma.booking.update({
+    where: {
+      id: booking.id
+    },
+    data: {
       customInputs: {
         appointment: appointmentId,
         patientId: data.patientId,
         accountId: data.accountId
       }
     }
-  });
+  })
 
   res.json({ booking, appointment: appointmentId })
 
@@ -211,5 +235,57 @@ router.delete('/user', async (req: Request, res: Response) => {
 
   res.json({ success: 1 })
 })
+
+// creat booking webhook
+router.post('/bookingsHook', async (req: Request, res: Response) => {
+
+  const { triggerEvent, createdAt, payload } = req.body as BookingPayload;
+  const { doctorId, accountId } = res.locals
+  if (triggerEvent !== triggerEventTypes.CREATED) return res.status(400).json({ message: "triggerEvent not vaild" });
+
+  const account = { id: accountId }
+
+  const basicFields: Array<{ id: PatientField; value: string }> = [
+    // { "id": PatientField.PHONE, "value": "+886987897654" }
+    { "id": PatientField.NAME, "value": payload.attendees[0].name },
+    // { "id": "gender", "value": "MALE" },
+    // { "id": "birthday", "value": "" },
+    // { "id": "idNumber", "value": "" },
+    { "id": PatientField.EMAIL, "value": payload.attendees[0].email },
+    // { "id": "address", "value": "" }
+  ]
+
+  const eventType = await prisma.eventType
+    .findFirst({
+      where: {
+        id: payload.eventTypeId
+      }
+    })
+  const metadata: any = eventType?.metadata
+
+  if (!metadata.treatmentId) {
+    return res.status(400).json({ message: "No need to synchronize data" });
+  }
+
+  let appointmentId = '';
+  appointmentId = await createTreatmentAppointment({
+    account,
+    doctorId,
+    patientId: '',
+    treatment: {
+      id: metadata.treatmentId,
+      name: metadata.treatmentName,
+      duration: Number(eventType?.length)
+    },
+    startISODate: parseISO(payload.startTime),
+    basicFields,
+    fields: [],
+    note: "",
+    bookingId: Number(payload.bookingId)
+  });
+
+  res.json({ appointmentId })
+});
+
 
 export default indexRouter;
