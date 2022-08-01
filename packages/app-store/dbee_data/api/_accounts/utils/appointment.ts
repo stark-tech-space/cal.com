@@ -60,59 +60,6 @@ const errorCodeStatusMapping: Record<ErrorCode, number> = {
   [ErrorCode.INTERNAL_SERVER_ERROR]: 500,
 };
 
-/**
- * create appointment
- * https://github.com/stark-tech-space/prm/discussions/44
- */
-router.post('/', async (req: Request, res: Response) => {
-  const account = res.locals.account as AccountWithId;
-  const { patientId, doctorId, start, type, treatment, fields, basicFields, note } =
-    req.body as CreateAppointmentRequest;
-  const startISODate = parseISO(start);
-
-  if (!isValid(startISODate) || isAfter(new Date(), startISODate)) {
-    res.status(400).json({ code: ErrorCode.INVALID_TIME });
-    return;
-  }
-
-  let appointmentId = '';
-  try {
-    switch (type) {
-      case AvailabilityType.OPD:
-        // appointmentId = await createOPDAppointment({
-        //   accountId,
-        //   doctorId,
-        //   patientId,
-        //   startDate,
-        //   basicFields,
-        //   fields,
-        //   note,
-        // });
-        break;
-      case AvailabilityType.TREATMENT:
-        appointmentId = await createTreatmentAppointment({
-          account,
-          doctorId,
-          patientId,
-          treatment,
-          startISODate,
-          basicFields,
-          fields,
-          note,
-        });
-        break;
-    }
-  } catch (error) {
-    if (error instanceof Error) {
-      const errorCode = (error.message as ErrorCode) || ErrorCode.INTERNAL_SERVER_ERROR;
-      res.status(errorCodeStatusMapping[errorCode] || 500).json({ code: errorCode });
-      return;
-    }
-  }
-
-  res.status(201).json({ id: appointmentId });
-});
-
 const checkBasicField = ({ id, value }: { id: PatientField; value: string }) => {
   switch (id) {
     case PatientField.ADDRESS:
@@ -259,6 +206,7 @@ export async function createTreatmentAppointment({
   basicFields,
   fields,
   note,
+  bookingId
 }: {
   account: { id: string };
   doctorId: string;
@@ -275,16 +223,16 @@ export async function createTreatmentAppointment({
     value: { id: string; name: string; value: string };
   }>;
   note: string;
+  bookingId: number
 }) {
-  console.log('==========1', accountId, doctorId)
   const startDate = utcToZonedTime(startISODate, TIMEZONE);
   const doctorDoc = await getDoctor({ accountId, doctorId });
-  console.log('==========1.1')
+
   const treatmentDoc = await getTreatment({
     accountId,
     treatmentId: treatment.id,
   });
-  console.log('==========1.2')
+
   if (!accountDoc || !doctorDoc) {
     throw new Error(ErrorCode.NOT_FOUND);
   }
@@ -292,7 +240,7 @@ export async function createTreatmentAppointment({
   if ((!treatment.id && !treatment.name) || treatment.duration <= 0) {
     throw new Error(ErrorCode.INVALID_TIME);
   }
-  console.log('==========2')
+
   const [dateString, timeString, weekDay] = format(startDate, 'yyyy-MM-dd|HH:mm|EEEE').split('|');
   const [hourString, minuteString] = timeString.split(':');
   const startMinutes = parseInt(hourString) * 60 + parseInt(minuteString);
@@ -336,17 +284,17 @@ export async function createTreatmentAppointment({
     maxSeats: 1,
     isPublic: false,
   };
-  console.log('==========3')
+
   const form = await getForm({
     accountId,
     formId: treatmentDoc?.formId,
   });
-  console.log('==========4')
+
   const filledFormBasicFields = checkBasicFields({
     formBasicFields: form?.basicFields || defaultBasicField,
     basicFields: basicFields,
   });
-  console.log('==========5')
+
   const filledFormFields: Array<FilledFormField> = checkFormFields({
     formFields: form?.fields || [],
     fields,
@@ -391,6 +339,7 @@ export async function createTreatmentAppointment({
     statusRecord: {
       CONFIRMED: Timestamp.now(),
     },
+    bookingId
   };
 
   await appointmentDocRef.set(appointment);

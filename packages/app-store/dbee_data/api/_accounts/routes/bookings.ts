@@ -1,8 +1,6 @@
 import express, { Request, Response } from "express";
 import prisma from "@calcom/prisma";
 import { firestore } from "../firebase";
-import { v4 as uuidv4 } from "uuid";
-import add from 'date-fns/add'
 
 const router = express.Router();
 
