@@ -6,7 +6,7 @@ export default async function getForm({
   formId,
 }: {
   accountId: string;
-  formId: string;
+  formId: string | undefined;
 }) {
   if (!accountId || !formId) return null;
   const formSnap = await firestore.doc(`accounts/${accountId}/forms/${formId}`).get();
