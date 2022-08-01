@@ -1,5 +1,6 @@
 import showToast from "@calcom/lib/notification";
-import { inferQueryOutput, trpc } from "@calcom/trpc/react";
+
+import { inferQueryOutput, trpc } from "@lib/trpc";
 
 import TeamListItem from "./TeamListItem";
 

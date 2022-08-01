@@ -4,10 +4,10 @@ import { HelpScout, useChat } from "react-live-chat-loader";
 
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import showToast from "@calcom/lib/notification";
-import { trpc } from "@calcom/trpc/react";
 import Button from "@calcom/ui/Button";
 
 import classNames from "@lib/classNames";
+import { trpc } from "@lib/trpc";
 
 import ContactMenuItem from "./ContactMenuItem";
 
@@ -46,7 +46,7 @@ export default function HelpMenuItem({ onHelpItemSelect }: HelpMenuItemProps) {
         <p className="mb-1 px-5 text-neutral-500">{t("resources").toUpperCase()}</p>
         <a
           onClick={() => onHelpItemSelect()}
-          href="https://docs.calendar.dbeedata.com/"
+          href="https://docs.dbeedata.com/"
           target="_blank"
           className="flex w-full px-5 py-2 pr-4 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
           rel="noreferrer">
@@ -60,7 +60,7 @@ export default function HelpMenuItem({ onHelpItemSelect }: HelpMenuItemProps) {
         </a>
         <a
           onClick={() => onHelpItemSelect()}
-          href="https://developer.calendar.dbeedata.com/"
+          href="https://developer.dbeedata.com/"
           target="_blank"
           className="flex w-full px-5 py-2 pr-4 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
           rel="noreferrer">
@@ -213,7 +213,7 @@ export default function HelpMenuItem({ onHelpItemSelect }: HelpMenuItemProps) {
         <a
           onClick={() => onHelpItemSelect()}
           className="font-medium  underline hover:text-neutral-700"
-          href="https://docs.calendar.dbeedata.com/"
+          href="https://docs.dbeedata.com/"
           target="_blank"
           rel="noreferrer">
           {t("browse_our_docs")}

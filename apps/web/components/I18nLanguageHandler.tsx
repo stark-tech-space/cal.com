@@ -1,7 +1,7 @@
 import { useTranslation } from "next-i18next";
 import { useEffect } from "react";
 
-import { trpc } from "@calcom/trpc/react";
+import { trpc } from "@lib/trpc";
 
 export function useViewerI18n() {
   return trpc.useQuery(["viewer.public.i18n"], {

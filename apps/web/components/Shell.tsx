@@ -22,10 +22,8 @@ import React, { Fragment, ReactNode, useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 
 import { useIsEmbed } from "@calcom/embed-core/embed-iframe";
-import CustomBranding from "@calcom/lib/CustomBranding";
 import { WEBAPP_URL, JOIN_SLACK, ROADMAP } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
-import { trpc } from "@calcom/trpc/react";
 import Button from "@calcom/ui/Button";
 import Dropdown, {
   DropdownMenuContent,
@@ -41,7 +39,9 @@ import ErrorBoundary from "@lib/ErrorBoundary";
 import classNames from "@lib/classNames";
 import { shouldShowOnboarding } from "@lib/getting-started";
 import useMeQuery from "@lib/hooks/useMeQuery";
+import { trpc } from "@lib/trpc";
 
+import CustomBranding from "@components/CustomBranding";
 import { KBarRoot, KBarContent, KBarTrigger } from "@components/Kbar";
 import Loader from "@components/Loader";
 import { HeadSeo } from "@components/seo/head-seo";
@@ -122,11 +122,7 @@ const Layout = ({
   status,
   plan,
   ...props
-}: LayoutProps & {
-  status: SessionContextValue["status"];
-  plan?: UserPlan;
-  isLoading: boolean;
-}) => {
+}: LayoutProps & { status: SessionContextValue["status"]; plan?: UserPlan; isLoading: boolean }) => {
   const isEmbed = useIsEmbed();
   const router = useRouter();
   const { data: routingForms } = trpc.useQuery([
@@ -171,24 +167,24 @@ const Layout = ({
       current: router.asPath.startsWith("/workflows"),
       pro: true,
     },
-    // {
-    //   name: t("apps"),
-    //   href: "/apps",
-    //   icon: ViewGridIcon,
-    //   current: router.asPath.startsWith("/apps") && !router.asPath.startsWith("/apps/routing_forms/"),
-    //   child: [
-    //     {
-    //       name: t("app_store"),
-    //       href: "/apps",
-    //       current: router.asPath === "/apps",
-    //     },
-    //     {
-    //       name: t("installed_apps"),
-    //       href: "/apps/installed",
-    //       current: router.asPath === "/apps/installed",
-    //     },
-    //   ],
-    // },
+    {
+      name: t("apps"),
+      href: "/apps",
+      icon: ViewGridIcon,
+      current: router.asPath.startsWith("/apps") && !router.asPath.startsWith("/apps/routing_forms/"),
+      child: [
+        {
+          name: t("app_store"),
+          href: "/apps",
+          current: router.asPath === "/apps",
+        },
+        {
+          name: t("installed_apps"),
+          href: "/apps/installed",
+          current: router.asPath === "/apps/installed",
+        },
+      ],
+    },
     {
       name: t("settings"),
       href: "/settings/profile",
@@ -201,7 +197,7 @@ const Layout = ({
   return (
     <>
       <HeadSeo
-        title={pageTitle ?? "DBee Calendar"}
+        title={pageTitle ?? "Cal.com"}
         description={props.subtitle ? props.subtitle?.toString() : ""}
         nextSeoProps={{
           nofollow: true,
@@ -266,7 +262,7 @@ const Layout = ({
                               )}
                             </a>
                           </Link>
-                          {/* {item.child &&
+                          {item.child &&
                             router.asPath.startsWith(item.href) &&
                             item.child.map((item) => {
                               return (
@@ -282,7 +278,7 @@ const Layout = ({
                                   </a>
                                 </Link>
                               );
-                            })} */}
+                            })}
                         </Fragment>
                       )
                     )}
@@ -303,8 +299,8 @@ const Layout = ({
                   </span>
                 </div>
                 <small style={{ fontSize: "0.5rem" }} className="mx-3 mt-1 mb-2 hidden opacity-50 lg:block">
-                  &copy; {new Date().getFullYear()} DBee Daya, Inc. v.{pkg.version + "-"}
-                  {process.env.NEXT_PUBLIC_WEBSITE_URL === "https://dbeedata.com" ? "h" : "sh"}
+                  &copy; {new Date().getFullYear()} Cal.com, Inc. v.{pkg.version + "-"}
+                  {process.env.NEXT_PUBLIC_WEBSITE_URL === "https://cal.com" ? "h" : "sh"}
                   <span className="lowercase" data-testid={`plan-${plan?.toLowerCase()}`}>
                     -{plan}
                   </span>
@@ -561,9 +557,9 @@ function UserDropdown({ small }: { small?: boolean }) {
                   {user.name || "Nameless User"}
                 </span>
                 <span className="block truncate font-normal text-neutral-500">
-                  {user?.username
-                    ? process.env.NEXT_PUBLIC_WEBSITE_URL === "https://calendar.dbeedata.com"
-                      ? `calendar.dbeedata.com/${user.username}`
+                  {user.username
+                    ? process.env.NEXT_PUBLIC_WEBSITE_URL === "https://cal.com"
+                      ? `cal.com/${user.username}`
                       : `/${user.username}`
                     : "No public page"}
                 </span>
@@ -613,8 +609,8 @@ function UserDropdown({ small }: { small?: boolean }) {
                 </a>
               </DropdownMenuItem>
             )}
-            {/* <DropdownMenuSeparator className="h-px bg-gray-200" />
-             <DropdownMenuItem>
+            <DropdownMenuSeparator className="h-px bg-gray-200" />
+            <DropdownMenuItem>
               <a
                 href={JOIN_SLACK}
                 target="_blank"
@@ -671,7 +667,7 @@ function UserDropdown({ small }: { small?: boolean }) {
               />
 
               {t("help")}
-            </button> */}
+            </button>
 
             <DropdownMenuSeparator className="h-px bg-gray-200" />
             <DropdownMenuItem>

@@ -6,7 +6,6 @@ import { InstallAppButton } from "@calcom/app-store/components";
 import { WEBSITE_URL } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import showToast from "@calcom/lib/notification";
-import { trpc } from "@calcom/trpc/react";
 import type { App } from "@calcom/types/App";
 import { Alert } from "@calcom/ui/Alert";
 import Button from "@calcom/ui/Button";
@@ -15,6 +14,7 @@ import EmptyScreen from "@calcom/ui/EmptyScreen";
 import { QueryCell } from "@lib/QueryCell";
 import classNames from "@lib/classNames";
 import { HttpError } from "@lib/core/http/error";
+import { trpc } from "@lib/trpc";
 
 import AppsShell from "@components/AppsShell";
 import { List, ListItem, ListItemText, ListItemTitle } from "@components/List";
@@ -118,7 +118,6 @@ const IntegrationsContainer = ({ variant, className = "" }: IntegrationsContaine
                 <List>
                   {data.items.map((item) => (
                     <IntegrationListItem
-                      slug={item.slug}
                       key={item.title}
                       title={item.title}
                       imageSrc={item.imageSrc}

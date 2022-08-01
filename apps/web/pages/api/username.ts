@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { checkUsername } from "@calcom/lib/server/checkUsername";
+import { checkUsername } from "@lib/core/server/checkUsername";
 
 type Response = {
   available: boolean;

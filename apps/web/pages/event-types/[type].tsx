@@ -37,7 +37,6 @@ import { useLocale } from "@calcom/lib/hooks/useLocale";
 import showToast from "@calcom/lib/notification";
 import prisma from "@calcom/prisma";
 import { StripeData } from "@calcom/stripe/server";
-import { trpc } from "@calcom/trpc/react";
 import { RecurringEvent } from "@calcom/types/Calendar";
 import { Alert } from "@calcom/ui/Alert";
 import Button from "@calcom/ui/Button";
@@ -53,6 +52,7 @@ import { HttpError } from "@lib/core/http/error";
 import { isSuccessRedirectAvailable } from "@lib/isSuccessRedirectAvailable";
 import { LocationObject, LocationType } from "@lib/location";
 import { slugify } from "@lib/slugify";
+import { trpc } from "@lib/trpc";
 import { inferSSRProps } from "@lib/types/inferSSRProps";
 
 import { ClientSuspense } from "@components/ClientSuspense";
@@ -67,7 +67,6 @@ import { EditLocationDialog } from "@components/dialog/EditLocationDialog";
 import RecurringEventController from "@components/eventtype/RecurringEventController";
 import CustomInputTypeForm from "@components/pages/eventtypes/CustomInputTypeForm";
 import Badge from "@components/ui/Badge";
-import EditableHeading from "@components/ui/EditableHeading";
 import InfoBadge from "@components/ui/InfoBadge";
 import CheckboxField from "@components/ui/form/CheckboxField";
 import CheckedSelect from "@components/ui/form/CheckedSelect";
@@ -311,6 +310,7 @@ const EventTypePage = (props: inferSSRProps<typeof getServerSideProps>) => {
   });
   const connectedCalendarsQuery = trpc.useQuery(["viewer.connectedCalendars"]);
 
+  const [editIcon, setEditIcon] = useState(true);
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState<OptionTypeBase | undefined>(undefined);
   const [selectedCustomInput, setSelectedCustomInput] = useState<EventTypeCustomInput | undefined>(undefined);
@@ -318,6 +318,7 @@ const EventTypePage = (props: inferSSRProps<typeof getServerSideProps>) => {
   const [customInputs, setCustomInputs] = useState<EventTypeCustomInput[]>(
     eventType.customInputs.sort((a, b) => a.id - b.id) || []
   );
+  const [tokensList, setTokensList] = useState<Array<Token>>([]);
 
   const defaultSeatsPro = 6;
   const minSeats = 2;
@@ -438,7 +439,6 @@ const EventTypePage = (props: inferSSRProps<typeof getServerSideProps>) => {
 
   const formMethods = useForm<FormValues>({
     defaultValues: {
-      title: eventType.title,
       locations: eventType.locations || [],
       recurringEvent: eventType.recurringEvent || null,
       schedule: eventType.schedule?.id,
@@ -846,10 +846,37 @@ const EventTypePage = (props: inferSSRProps<typeof getServerSideProps>) => {
       <Shell
         title={t("event_type_title", { eventTypeTitle: eventType.title })}
         heading={
-          <EditableHeading
-            title={formMethods.watch("title")}
-            onChange={(value) => formMethods.setValue("title", value)}
-          />
+          <div className="group relative cursor-pointer" onClick={() => setEditIcon(false)}>
+            {editIcon ? (
+              <>
+                <h1
+                  style={{ fontSize: 22, letterSpacing: "-0.0009em" }}
+                  className="inline pl-0 text-gray-900 focus:text-black group-hover:text-gray-500">
+                  {formMethods.getValues("title") && formMethods.getValues("title") !== ""
+                    ? formMethods.getValues("title")
+                    : eventType.title}
+                </h1>
+                <PencilIcon className="ml-1 -mt-1 inline h-4 w-4 text-gray-700 group-hover:text-gray-500" />
+              </>
+            ) : (
+              <div style={{ marginBottom: -11 }}>
+                <input
+                  type="text"
+                  autoFocus
+                  style={{ top: -6, fontSize: 22 }}
+                  required
+                  className="relative h-10 w-full cursor-pointer border-none bg-transparent pl-0 text-gray-900 hover:text-gray-700 focus:text-black focus:outline-none focus:ring-0"
+                  placeholder={t("quick_chat")}
+                  {...formMethods.register("title")}
+                  defaultValue={eventType.title}
+                  onBlur={() => {
+                    setEditIcon(true);
+                    formMethods.getValues("title") === "" && formMethods.setValue("title", eventType.title);
+                  }}
+                />
+              </div>
+            )}
+          </div>
         }
         subtitle={eventType.description || ""}>
         <ClientSuspense fallback={<Loader />}>
@@ -1953,7 +1980,7 @@ const EventTypePage = (props: inferSSRProps<typeof getServerSideProps>) => {
                   className="text-md flex items-center rounded-sm px-2 py-1 text-sm font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900"
                   eventTypeId={eventType.id}
                 />
-                {/* This will only show if the user is not a member (ADMIN,OWNER) and if there is no current membership 
+                {/* This will only show if the user is not a member (ADMIN,OWNER) and if there is no current membership
                       - meaning you are within an eventtype that does not belong to a team */}
                 {(props.currentUserMembership?.role !== "MEMBER" || !props.currentUserMembership) && (
                   <Dialog>

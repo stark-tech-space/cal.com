@@ -30,7 +30,6 @@ import {
   useIsBackgroundTransparent,
   useIsEmbed,
 } from "@calcom/embed-core/embed-iframe";
-import CustomBranding from "@calcom/lib/CustomBranding";
 import classNames from "@calcom/lib/classNames";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { HttpError } from "@calcom/lib/http-error";
@@ -51,6 +50,7 @@ import { parseDate, parseRecurringDates } from "@lib/parseDate";
 import slugify from "@lib/slugify";
 import { collectPageParameters, telemetryEventTypes, useTelemetry } from "@lib/telemetry";
 
+import CustomBranding from "@components/CustomBranding";
 import AvatarGroup from "@components/ui/AvatarGroup";
 import type PhoneInputType from "@components/ui/form/PhoneInput";
 
