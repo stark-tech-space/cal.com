@@ -10,9 +10,23 @@ import { firestore } from "../firebase";
 import { v4 as uuidv4 } from "uuid";
 import add from 'date-fns/add'
 import parseISO from 'date-fns/parseISO'
+import { AccountWithId } from '../types/account';
+import { CreateAppointmentRequest } from '../types/appointment'
+import isValid from 'date-fns/isValid';
+import isAfter from 'date-fns/isAfter';
+import { createTreatmentAppointment } from '../utils/appointment'
 
 const indexRouter = express.Router();
 const router = express.Router();
+
+enum ErrorCode {
+  INVALID_TIME = 'INVALID_TIME',
+  NO_OPD_TIME = 'NO_OPD_TIME',
+  FIELD_ERROR = 'FIELD_ERROR',
+  NOT_FOUND = 'NOT_FOUND',
+  INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR',
+}
+
 
 indexRouter.get(`/`, async (req: Request, res: Response) => {
 
@@ -98,9 +112,34 @@ router.post(`/bookings`, async (req: Request, res: Response) => {
   })
 
   // create firestore appointment
-  const appointmentDocRef = firestore.collection(`accounts/${accountId}/appointments`).doc();
+  // const appointmentDocRef = firestore.collection(`accounts/${accountId}/appointments`).doc();
 
-  await appointmentDocRef.set(data);
+  // await appointmentDocRef.set(data);
+
+  const account = { id: accountId }
+  const { patientId, start, treatment, fields, basicFields, note } =
+    req.body as CreateAppointmentRequest;
+  const startISODate = parseISO(start);
+
+  console.log('==========isValid(startISODate)', isValid(startISODate))
+
+  if (!isValid(startISODate) || isAfter(new Date(), startISODate)) {
+    res.status(400).json({ code: ErrorCode.INVALID_TIME });
+    return;
+  }
+
+  let appointmentId = '';
+  appointmentId = await createTreatmentAppointment({
+    account,
+    doctorId,
+    patientId,
+    treatment,
+    startISODate,
+    basicFields,
+    fields,
+    note,
+  });
+
 
   // need to check time zone
   const booking = await prisma.booking.create({
@@ -114,13 +153,14 @@ router.post(`/bookings`, async (req: Request, res: Response) => {
       userId: user.id,
       uid: uuidv4(),
       customInputs: {
-        appointment: appointmentDocRef.id,
-        patientId: data.patientId
+        appointment: appointmentId,
+        patientId: data.patientId,
+        accountId: data.accountId
       }
     }
   });
 
-  res.json({ booking, appointment: appointmentDocRef.id })
+  res.json({ booking, appointment: appointmentId })
 
 })
 

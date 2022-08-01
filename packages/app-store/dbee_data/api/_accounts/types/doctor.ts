@@ -37,5 +37,6 @@ export type Doctor = {
   calUserId?: number;
   calApiKey?: string;
   timekitResourceId: string;
-  doctorId: string
+  doctorId: string;
+  jobTitle: string;
 };

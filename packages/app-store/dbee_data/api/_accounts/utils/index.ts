@@ -123,7 +123,7 @@ export async function updateDoctorCalEventype(availabilities: Record<WeekDay, Ar
       eventType = await prisma.eventType.create({
         data: {
           userId,
-          title: `${treatment[0].name}(${treatment[0].duration}分钟)`,
+          title: `${treatment[0].name}`,
           eventName: treatment[0].name,
           length: treatment[0].duration,
           slug: name,
@@ -144,7 +144,6 @@ export async function updateDoctorCalEventype(availabilities: Record<WeekDay, Ar
     if (eventType) {
       treatment[0].eventTypeId = eventType.id
       result.push(treatment[0])
-      console.log('===treatment', treatment[0])
     }
   }))
 
@@ -246,3 +245,4 @@ export function getRandomString(len: number): string {
   }
   return _str;
 }
+
