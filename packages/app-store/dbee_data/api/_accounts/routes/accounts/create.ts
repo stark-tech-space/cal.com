@@ -3,6 +3,7 @@ import prisma from "@calcom/prisma";
 import { hashAPIKey } from "@calcom/ee/lib/api/apiKeys";
 import { initDoctorCalSchedule, getRandomString } from "../../utils/index"
 import { Doctor } from '../../types/doctor'
+import { v4 as uuidv4 } from "uuid";
 
 export default async (req: Request, res: Response) => {
   // If user is not ADMIN, return unauthorized.
@@ -25,6 +26,15 @@ export default async (req: Request, res: Response) => {
       }
     }
   });
+
+  // create webhook
+  const webhook = await prisma.webhook.create({
+    data: {
+      id: uuidv4(), userId: user.id, subscriberUrl: `${process.env.NEXT_PUBLIC_WEBAPP_URL}/api/integrations/dbee_data/accounts/${accountId}/doctors/${data.doctorId}/bookingsHook`, eventTriggers: ['BOOKING_CREATED', 'BOOKING_RESCHEDULED', 'BOOKING_CANCELLED']
+    }
+  });
+
+  console.log('========webhook', webhook)
 
   // create user apikey
   const apiKeyString = getRandomString(30);

@@ -39,6 +39,7 @@ export type Appointment = {
   createdAt: FirebaseFirestore.Timestamp;
   updatedAt: FirebaseFirestore.Timestamp;
   statusRecord: Partial<Record<AppointmentStatus, FirebaseFirestore.Timestamp>>;
+  bookingId: number
 };
 
 export type CreateAppointmentRequest = {

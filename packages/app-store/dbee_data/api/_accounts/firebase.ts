@@ -1,4 +1,5 @@
 import firebase from 'firebase-admin';
+import { getFirestore } from 'firebase-admin/firestore';
 
 if (firebase.apps.length === 0) {
   firebase.initializeApp({
@@ -15,3 +16,4 @@ export const firestore = firebase.firestore();
 
 export const Timestamp = firebase.firestore.Timestamp;
 export const FieldValue = firebase.firestore.FieldValue;
+export const DB = getFirestore();

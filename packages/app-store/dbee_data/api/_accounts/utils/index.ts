@@ -6,12 +6,14 @@ import { EventType } from "@calcom/prisma/client";
 import startOfDay from 'date-fns/startOfDay';
 import add from 'date-fns/add'
 import groupBy from 'lodash/fp/groupBy'
+import { firestore } from "../firebase";
+import { CountDoc } from '../types/count';
 
 const TIMEZONE = 'Asia/Taipei'
 
 // Split availabilities into availability in cal and schedule
 export function transformAvailabilitiesToCal(availabilities: Record<WeekDay, Array<Availability>>, userId: any, treatmentList: any) {
-  
+
   /* 
     1. create the user in cal and save the returned apikey
     2. convert the current schedule to a combination of eventype, schedule
@@ -44,7 +46,7 @@ export function transformAvailabilitiesToCal(availabilities: Record<WeekDay, Arr
         })
         availability.treatments.map((treatment) => {
           let eventType = treatmentList.find((v: any) => { return v.uniqueString == treatment.uniqueString })
-          
+
           allAvailabilities.push({
             startTime: start,
             endTime: end,
@@ -129,7 +131,8 @@ export async function updateDoctorCalEventype(availabilities: Record<WeekDay, Ar
           slug: name,
           metadata: {
             treatmentId: treatment[0].id,
-            uniqueString: treatment[0].uniqueString
+            uniqueString: treatment[0].uniqueString,
+            treatmentName: treatment[0].name
           },
           users: {
             connect: [{
@@ -246,3 +249,33 @@ export function getRandomString(len: number): string {
   return _str;
 }
 
+
+export async function generateSeatNumber({
+  accountId,
+  groupId,
+  dateString,
+  maxSeats,
+}: {
+  accountId: string;
+  groupId: string;
+  dateString: string;
+  maxSeats: number;
+}) {
+  const countRef = firestore.doc(`accounts/${accountId}/counts/${dateString}`);
+  return await firestore.runTransaction(async (transaction) => {
+    const countSnap = await transaction.get(countRef);
+
+    const countDoc = countSnap.exists ? (countSnap.data() as CountDoc) : {};
+    const nextCount = (countDoc[groupId]?.cur || 0) + 1;
+
+    // if we want to check for errors. Concern is we may want the option to force more bookings than max seats
+    // if (nextCount > maxSeats) return 0
+    if (countSnap.exists) {
+      transaction.update(countRef, { [groupId]: { cur: nextCount, max: maxSeats } });
+    } else {
+      transaction.create(countRef, { [groupId]: { cur: nextCount, max: maxSeats } });
+    }
+
+    return nextCount;
+  });
+};
