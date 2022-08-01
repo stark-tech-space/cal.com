@@ -18,6 +18,7 @@ export default async (req: Request, res: Response) => {
       email: data.email,
       timeZone: 'Asia/Taipei',
       username: data.doctorId.toLowerCase(),
+      bufferTime: data.bookingStartMinsModulus,
       metadata: {
         accountId: accountId,
         doctorId: data.doctorId

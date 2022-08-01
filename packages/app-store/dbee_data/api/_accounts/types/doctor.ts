@@ -11,7 +11,8 @@ export type Treatment = {
   maxSeats: number; // 人數上限
   isPublic: boolean; // 向客戶顯示
   duration: number; // 療程時長
-  eventTypeId?: number
+  eventTypeId?: number,
+  uniqueString?: string
 };
 
 export type Availability = {

@@ -11,7 +11,7 @@ const TIMEZONE = 'Asia/Taipei'
 
 // Split availabilities into availability in cal and schedule
 export function transformAvailabilitiesToCal(availabilities: Record<WeekDay, Array<Availability>>, userId: any, treatmentList: any) {
-
+  
   /* 
     1. create the user in cal and save the returned apikey
     2. convert the current schedule to a combination of eventype, schedule
@@ -42,9 +42,9 @@ export function transformAvailabilitiesToCal(availabilities: Record<WeekDay, Arr
         let end = add(startOfDay(new Date()), {
           minutes: availability.end
         })
-
         availability.treatments.map((treatment) => {
-          let eventType = treatmentList.find((v: any) => { return v.id == treatment.id })
+          let eventType = treatmentList.find((v: any) => { return v.uniqueString == treatment.uniqueString })
+          
           allAvailabilities.push({
             startTime: start,
             endTime: end,
@@ -87,15 +87,15 @@ export async function updateDoctorCalEventype(availabilities: Record<WeekDay, Ar
     5. if there are both sides to save the assignment can be
   */
   let allTreatments: Array<Treatment> = []
-
   Object.entries(availabilities).map(([week, availabilities]) => {
     availabilities.map((availability) => {
       availability.treatments.map((treatment) => {
+        treatment['uniqueString'] = treatment.id + '_' + treatment.duration
         allTreatments.push(treatment)
       })
     })
   })
-  const treatmentGroup = groupBy((item: Treatment) => item.id)(allTreatments)
+  const treatmentGroup = groupBy((item: Treatment) => item.uniqueString)(allTreatments)
 
   const data = await prisma.user
     .findUnique({
@@ -107,9 +107,9 @@ export async function updateDoctorCalEventype(availabilities: Record<WeekDay, Ar
   const allEventype = data.eventTypes
 
   let result: any = []
-  await Promise.all(Object.entries(treatmentGroup).map(async ([id, treatment]) => {
+  await Promise.all(Object.entries(treatmentGroup).map(async ([uniqueString, treatment]) => {
     let eventType: any = allEventype.find((v: any) => {
-      if (v.metadata.treatmentId.toString() == id) {
+      if (v.metadata.uniqueString == uniqueString) {
         v.exist = true
         return true
       }
@@ -118,17 +118,18 @@ export async function updateDoctorCalEventype(availabilities: Record<WeekDay, Ar
 
     if (!eventType) {
       // There is no eventype, you need to create it and bind the eventypeId after creating it
-      let name = `${treatment[0].name}_${doctorId}`
+      let name = `${treatment[0].name}_${treatment[0].duration}_${doctorId}`
 
       eventType = await prisma.eventType.create({
         data: {
           userId,
-          title: treatment[0].name,
+          title: `${treatment[0].name}(${treatment[0].duration}分钟)`,
           eventName: treatment[0].name,
+          length: treatment[0].duration,
           slug: name,
-          length: 30,
           metadata: {
-            treatmentId: treatment[0].id
+            treatmentId: treatment[0].id,
+            uniqueString: treatment[0].uniqueString
           },
           users: {
             connect: [{
@@ -143,6 +144,7 @@ export async function updateDoctorCalEventype(availabilities: Record<WeekDay, Ar
     if (eventType) {
       treatment[0].eventTypeId = eventType.id
       result.push(treatment[0])
+      console.log('===treatment', treatment[0])
     }
   }))
 
