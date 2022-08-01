@@ -19,6 +19,7 @@ import {
   useIsEmbed,
 } from "@calcom/embed-core/embed-iframe";
 import { parseRecurringEvent } from "@calcom/lib";
+import CustomBranding from "@calcom/lib/CustomBranding";
 import { WEBSITE_URL } from "@calcom/lib/constants";
 import { getDefaultEvent } from "@calcom/lib/defaultEvents";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
@@ -38,7 +39,6 @@ import { collectPageParameters, telemetryEventTypes, useTelemetry } from "@lib/t
 import { isBrowserLocale24h } from "@lib/timeFormat";
 import { inferSSRProps } from "@lib/types/inferSSRProps";
 
-import CustomBranding from "@components/CustomBranding";
 import CancelBooking from "@components/booking/CancelBooking";
 import { HeadSeo } from "@components/seo/head-seo";
 
@@ -548,7 +548,9 @@ export default function Success(props: SuccessProps) {
                   )}
                   {session === null && !(userIsOwner || props.hideBranding) && (
                     <div className="border-bookinglightest text-booking-lighter pt-4 text-center text-xs dark:border-gray-900 dark:text-white">
-                      <a href="https://cal.com/signup">{t("create_booking_link_with_calcom")}</a>
+                      <a href="https://calendar.dbeedata.com/signup">
+                        {t("create_booking_link_with_calcom")}
+                      </a>
 
                       <form
                         onSubmit={(e) => {
@@ -556,7 +558,7 @@ export default function Success(props: SuccessProps) {
                           const target = e.target as typeof e.target & {
                             email: { value: string };
                           };
-                          router.push(`https://cal.com/signup?email=${target.email.value}`);
+                          router.push(`https://calendar.dbeedata.com/signup?email=${target.email.value}`);
                         }}
                         className="mt-4 flex">
                         <EmailInput
@@ -564,7 +566,7 @@ export default function Success(props: SuccessProps) {
                           id="email"
                           defaultValue={router.query.email}
                           className="focus:border-brand border-bookinglightest mt-0 block w-full rounded-sm border-gray-300 focus:ring-black dark:border-gray-900 dark:bg-black dark:text-white sm:text-sm"
-                          placeholder="rick.astley@cal.com"
+                          placeholder="you@dbeedata.com"
                         />
                         <Button size="lg" type="submit" className="min-w-max" color="primary">
                           {t("try_for_free")}

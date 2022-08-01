@@ -2,8 +2,8 @@ import { useCallback, useRef, useState } from "react";
 import { useEffect } from "react";
 import { HexColorInput, HexColorPicker } from "react-colorful";
 
-import { isValidHexCode, fallBackHex } from "@components/CustomBranding";
-import Swatch from "@components/Swatch";
+import { isValidHexCode, fallBackHex } from "@calcom/lib/CustomBranding";
+import Swatch from "@calcom/ui/v2/Swatch";
 
 type Handler = (event: MouseEvent | Event) => void;
 function useEventListener<
@@ -87,7 +87,7 @@ const ColorPicker = (props: ColorPickerProps) => {
         </div>
       )}
       <HexColorInput
-        className="ml-1 block w-full rounded-sm border border-gray-300 px-3 py-2 sm:text-sm"
+        className="ml-1 block w-full rounded-r-md border border-gray-300 px-3 py-2 sm:text-sm"
         color={color}
         onChange={(val) => {
           setColor(val);
