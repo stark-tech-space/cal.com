@@ -127,7 +127,7 @@ export async function updateDoctorCalEventype(availabilities: Record<WeekDay, Ar
           userId,
           title: `${treatment[0].name}`,
           eventName: treatment[0].name,
-          length: treatment[0].duration,
+          length: Number(treatment[0].duration),
           slug: name,
           metadata: {
             treatmentId: treatment[0].id,
