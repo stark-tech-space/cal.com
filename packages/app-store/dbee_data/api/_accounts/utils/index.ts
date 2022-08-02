@@ -132,7 +132,8 @@ export async function updateDoctorCalEventype(availabilities: Record<WeekDay, Ar
           metadata: {
             treatmentId: treatment[0].id,
             uniqueString: treatment[0].uniqueString,
-            treatmentName: treatment[0].name
+            treatmentName: treatment[0].name,
+            isPublic: treatment[0].isPublic ? true : false
           },
           users: {
             connect: [{
