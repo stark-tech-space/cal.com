@@ -39,6 +39,13 @@ export enum triggerEventTypes {
   CANCELLED = 'BOOKING_CANCELLED',
 }
 
+export enum calBookingStatus {
+  CANCELLED = 'cancelled',
+  ACCEPTED = 'accepted',
+  REJECTED = 'rejected',
+  PENDING = 'pending'
+}
+
 export enum ERROR_CODE {
   NOT_FOUND = 'NOT_FOUND',
   FIELD_ERROR = 'FIELD_ERROR',
