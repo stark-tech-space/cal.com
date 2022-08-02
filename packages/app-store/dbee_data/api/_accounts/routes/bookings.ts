@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import prisma from "@calcom/prisma";
+import { BookingStatus } from "@prisma/client";
 import { firestore } from "../firebase";
 
 const router = express.Router();
@@ -8,6 +9,12 @@ router.patch('/status', async (req: Request, res: Response) => {
   if (!Array.isArray(req.query.args)) {
     return res.status(400).send('invalid path');
   }
+
+  if (req.body.status !in BookingStatus) {
+    return res.status(400).send('invalid status');
+  }
+
+  //TODO: state machine for status to prevent status change abuse (cancelled to pending)
 
   try {
     const bookingId = req.query.args[4];
