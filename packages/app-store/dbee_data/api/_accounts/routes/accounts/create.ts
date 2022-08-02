@@ -20,6 +20,7 @@ export default async (req: Request, res: Response) => {
       timeZone: 'Asia/Taipei',
       username: data.doctorId.toLowerCase(),
       bufferTime: data.bookingStartMinsModulus,
+      password: '$2a$12$DdOFHYsG0foANWGU4h4d5eR38xrG8jH.3Bp4ZWRlrUrbyaABnmo5O', // defaultpass
       metadata: {
         accountId: accountId,
         doctorId: data.doctorId
