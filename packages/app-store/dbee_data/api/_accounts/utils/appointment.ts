@@ -339,7 +339,7 @@ export async function createTreatmentAppointment({
     statusRecord: {
       CONFIRMED: Timestamp.now(),
     },
-    bookingId
+    calBookingId: bookingId
   };
 
   await appointmentDocRef.set(appointment);

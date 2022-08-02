@@ -9,10 +9,12 @@ import { deleteDoctorCalEventype } from "../utils/index"
 import { v4 as uuidv4 } from "uuid";
 import { CreateAppointmentRequest } from '../types/appointment'
 import { createTreatmentAppointment } from '../utils/appointment'
-import { BookingPayload, triggerEventTypes } from '../types/booking'
-
+import { BookingPayload, triggerEventTypes, calBookingStatus } from '../types/booking'
+import getAppointment from '../services/firestore/appointment';
 import { parseISO, add, isValid, isAfter } from 'date-fns';
 import { PatientField } from '../types/patient';
+import { firestore } from '../firebase';
+
 const indexRouter = express.Router();
 const router = express.Router();
 enum ErrorCode {
@@ -137,8 +139,6 @@ router.post(`/bookings`, async (req: Request, res: Response) => {
     req.body as CreateAppointmentRequest;
   const startISODate = parseISO(start);
 
-  console.log('==========isValid(startISODate)', isValid(startISODate))
-
   if (!isValid(startISODate) || isAfter(new Date(), startISODate)) {
     res.status(400).json({ code: ErrorCode.INVALID_TIME });
     return;
@@ -190,15 +190,26 @@ router.post(`/bookings`, async (req: Request, res: Response) => {
 
 router.get(`/schedule`, async (req: Request, res: Response) => {
 
-  const { eventTypeId, start, end, duration, bookingStartMinsModulus } = req.query;
+  const { eventTypeId, start, end, duration} = req.query;
+  const { doctorId, accountId } = res.locals
 
   const schedule = await prisma.eventType.findUnique({ where: { id: Number(eventTypeId) } }).schedule().availability()
+
+  const user = await prisma.user.findFirst({
+    where: {
+      metadata: {
+        path: ['doctorId'],
+        equals: doctorId
+      }
+    }, rejectOnNotFound: true
+  })
+
 
   const result = await convertSchedule(
     start,
     end,
     Number(duration),
-    Number(bookingStartMinsModulus),
+    Number(user.bufferTime),
     schedule)
 
   res.json(result)
@@ -241,50 +252,83 @@ router.post('/bookingsHook', async (req: Request, res: Response) => {
 
   const { triggerEvent, createdAt, payload } = req.body as BookingPayload;
   const { doctorId, accountId } = res.locals
-  if (triggerEvent !== triggerEventTypes.CREATED) return res.status(400).json({ message: "triggerEvent not vaild" });
+  // if (triggerEvent !== triggerEventTypes.CREATED) return res.status(400).json({ message: "triggerEvent not vaild" });
 
-  const account = { id: accountId }
+  switch (triggerEvent) {
+    case triggerEventTypes.CREATED:
+      //TODO: create appointment in firestore (if made from cal so does not exist and eventType has dbee data)
+      {
+        const account = { id: accountId }
 
-  const basicFields: Array<{ id: PatientField; value: string }> = [
-    // { "id": PatientField.PHONE, "value": "+886987897654" }
-    { "id": PatientField.NAME, "value": payload.attendees[0].name },
-    // { "id": "gender", "value": "MALE" },
-    // { "id": "birthday", "value": "" },
-    // { "id": "idNumber", "value": "" },
-    { "id": PatientField.EMAIL, "value": payload.attendees[0].email },
-    // { "id": "address", "value": "" }
-  ]
+        const basicFields: Array<{ id: PatientField; value: string }> = [
+          // { "id": PatientField.PHONE, "value": "+886987897654" }
+          { "id": PatientField.NAME, "value": payload.attendees[0].name },
+          // { "id": "gender", "value": "MALE" },
+          // { "id": "birthday", "value": "" },
+          // { "id": "idNumber", "value": "" },
+          { "id": PatientField.EMAIL, "value": payload.attendees[0].email },
+          // { "id": "address", "value": "" }
+        ]
 
-  const eventType = await prisma.eventType
-    .findFirst({
-      where: {
-        id: payload.eventTypeId
+        const eventType = await prisma.eventType
+          .findFirst({
+            where: {
+              id: payload.eventTypeId
+            }
+          })
+        const metadata: any = eventType?.metadata
+
+        if (!metadata.treatmentId) {
+          return res.status(400).json({ message: "No need to synchronize data" });
+        }
+
+        let appointmentId = '';
+        appointmentId = await createTreatmentAppointment({
+          account,
+          doctorId,
+          patientId: '',
+          treatment: {
+            id: metadata.treatmentId,
+            name: metadata.treatmentName,
+            duration: Number(eventType?.length)
+          },
+          startISODate: parseISO(payload.startTime),
+          basicFields,
+          fields: [],
+          note: "",
+          bookingId: Number(payload.bookingId)
+        });
+
+        res.json({ appointmentId })
       }
-    })
-  const metadata: any = eventType?.metadata
+      break;
+    case triggerEventTypes.CANCELLED:
+      // change status to cancelled
+      const { bookingId } = payload
 
-  if (!metadata.treatmentId) {
-    return res.status(400).json({ message: "No need to synchronize data" });
+      const booking: any = await prisma.booking.findFirst({ where: { id: Number(bookingId) } })
+
+      const appointmentId = booking?.customInputs?.appointment
+
+      const appointment = await getAppointment(accountId, appointmentId);
+
+      if (!appointment) {
+        console.log(`can't find doc with id: ${appointmentId} in account: ${accountId}`);
+        return res.sendStatus(200);
+      }
+
+      await firestore.doc(`accounts/${accountId}/appointments/${appointmentId}`).update({
+        status: calBookingStatus.CANCELLED,
+      });
+
+      res.json({ appointmentId })
+      break;
+    case triggerEventTypes.RESCHEDULED:
+      // TODO: change scheduled dates in firestore and create new appointment with rescheduledUid and update status of old appointment
+      break;
+    default:
+      break;
   }
-
-  let appointmentId = '';
-  appointmentId = await createTreatmentAppointment({
-    account,
-    doctorId,
-    patientId: '',
-    treatment: {
-      id: metadata.treatmentId,
-      name: metadata.treatmentName,
-      duration: Number(eventType?.length)
-    },
-    startISODate: parseISO(payload.startTime),
-    basicFields,
-    fields: [],
-    note: "",
-    bookingId: Number(payload.bookingId)
-  });
-
-  res.json({ appointmentId })
 });
 
 
