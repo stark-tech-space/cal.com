@@ -190,15 +190,26 @@ router.post(`/bookings`, async (req: Request, res: Response) => {
 
 router.get(`/schedule`, async (req: Request, res: Response) => {
 
-  const { eventTypeId, start, end, duration, bookingStartMinsModulus } = req.query;
+  const { eventTypeId, start, end, duration} = req.query;
+  const { doctorId, accountId } = res.locals
 
   const schedule = await prisma.eventType.findUnique({ where: { id: Number(eventTypeId) } }).schedule().availability()
+
+  const user = await prisma.user.findFirst({
+    where: {
+      metadata: {
+        path: ['doctorId'],
+        equals: doctorId
+      }
+    }, rejectOnNotFound: true
+  })
+
 
   const result = await convertSchedule(
     start,
     end,
     Number(duration),
-    Number(bookingStartMinsModulus),
+    Number(user.bufferTime),
     schedule)
 
   res.json(result)
