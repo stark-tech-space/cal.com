@@ -11,8 +11,6 @@ const router = express.Router();
  * uniqueness verification
  */
 router.get('/emails/:email', async (req: Request, res: Response) => {
-
-  console.log(req.params, req.query)
   const { email } = req.params
 
   if (!email) return res.status(400).send('email require');
