@@ -1,6 +1,6 @@
 {
-    "name": "Cal.com",
-    "short_name": "Cal.com",
+    "name": "DBee Calendar",
+    "short_name": "DBee Calendar",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",

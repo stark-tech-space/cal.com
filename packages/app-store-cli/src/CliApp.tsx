@@ -72,7 +72,7 @@ const BaseAppFork = {
       type: `${slug}_${category}`,
       imageSrc: `/api/app-store/${slug}/icon.svg`,
       logo: `/api/app-store/${slug}/icon.svg`,
-      url: `https://cal.com/apps/${slug}`,
+      url: `https://calendar.dbeedata.com/apps/${slug}`,
       variant: category,
       categories: [category],
       publisher: publisherName,

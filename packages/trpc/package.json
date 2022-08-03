@@ -1,6 +1,6 @@
 {
   "name": "@calcom/trpc",
-  "description": "Shared tRPC library for Cal.com",
+  "description": "Shared tRPC library for DBee Calendar",
   "authors": "zomars",
   "version": "1.0.0",
   "main": "index.ts",

@@ -8,7 +8,7 @@
   <a href="https://github.com/calcom/cal.com/issues">Community Support</a>
 </div>
 
-# Cal.com Documentation
+# DBee Calendar Documentation
 
 The official product, support and developer documentation, containing information and guides about using the product as well as support for self-hosted installations. This documentation site runs on [Nextra](https://nextra.vercel.app), so you may refer to their documentation should you need information on anything that isn't covered here.
 

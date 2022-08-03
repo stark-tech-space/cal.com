@@ -20,7 +20,7 @@ export const metadata = {
   rating: 0,
   reviews: 0,
   isGlobal: false,
-  email: "help@cal.com",
+  email: "help@calendar.dbeedata.com",
   locationType: LocationType.Tandem,
   locationLabel: "Tandem Video",
 } as App;

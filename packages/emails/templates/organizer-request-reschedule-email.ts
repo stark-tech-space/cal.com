@@ -21,7 +21,7 @@ export default class OrganizerRequestRescheduledEmail extends OrganizerScheduled
         filename: "event.ics",
         content: this.getiCalEventAsString(),
       },
-      from: `Cal.com <${this.getMailerOptions().from}>`,
+      from: `DBee Calendar <${this.getMailerOptions().from}>`,
       to: toAddresses.join(","),
       subject: `${this.t("rescheduled_event_type_subject", {
         eventType: this.calEvent.type,

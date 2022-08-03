@@ -108,8 +108,8 @@ export function TeamSettingsPage() {
                         message={
                           <>
                             {t("hidden_team_owner_message")} <UpgradeToFlexibleProModal teamId={team.id} />
-                            {/* <a href={"https://cal.com/upgrade"} className="underline">
-                              {"https://cal.com/upgrade"}
+                            {/* <a href={"https://calendar.dbeedata.com/upgrade"} className="underline">
+                              {"https://calendar.dbeedata.com/upgrade"}
                             </a> */}
                           </>
                         }

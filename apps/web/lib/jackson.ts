@@ -13,7 +13,7 @@ const opts: JacksonOption = {
     url: samlDatabaseUrl,
     encryptionKey: process.env.CALENDSO_ENCRYPTION_KEY,
   },
-  samlAudience: "https://saml.cal.com",
+  samlAudience: "https://saml.calendar.dbeedata.com",
 };
 
 let apiController: IAPIController;

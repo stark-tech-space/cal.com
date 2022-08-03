@@ -10,17 +10,17 @@ export const metadata = {
   // If using static next public folder, can then be referenced from the base URL (/).
   imageSrc: "/api/app-store/_example/icon.svg",
   logo: "/api/app-store/_example/icon.svg",
-  publisher: "Cal.com",
+  publisher: "DBee Calendar",
   rating: 5,
   reviews: 69,
   slug: "example_video",
   title: "Example App",
   trending: true,
   type: "example_video",
-  url: "https://cal.com/",
+  url: "https://calendar.dbeedata.com/",
   variant: "conferencing",
   verified: true,
-  email: "help@cal.com",
+  email: "help@calendar.dbeedata.com",
 } as App;
 
 export default metadata;

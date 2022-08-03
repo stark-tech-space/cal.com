@@ -17,14 +17,14 @@ export const metadata = {
   trending: true,
   reviews: 69,
   imageSrc: "/api/app-store/stripepayment/icon.svg",
-  publisher: "Cal.com",
+  publisher: "DBee Calendar",
   title: "Stripe",
   type: "stripe_payment",
-  url: "https://cal.com/",
+  url: "https://calendar.dbeedata.com/",
   docsUrl: "https://stripe.com/docs",
   variant: "payment",
   verified: true,
-  email: "help@cal.com",
+  email: "help@calendar.dbeedata.com",
 } as App;
 
 export default metadata;

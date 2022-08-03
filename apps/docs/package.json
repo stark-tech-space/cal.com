@@ -13,7 +13,7 @@
     "start": "PORT=4000 next start",
     "type-check": "tsc --pretty --noEmit"
   },
-  "author": "Cal.com, Inc.",
+  "author": "DBee Calendar, Inc.",
   "license": "MIT",
   "dependencies": {
     "iframe-resizer-react": "^1.1.0",

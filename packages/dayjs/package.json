@@ -1,6 +1,6 @@
 {
   "name": "@calcom/dayjs",
-  "description": "Cal.com's Day.js shared library",
+  "description": "DBee Calendar's Day.js shared library",
   "version": "1.0.0",
   "main": "./index.ts",
   "dependencies": {

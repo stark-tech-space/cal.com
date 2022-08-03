@@ -10,7 +10,7 @@ export const metadata = {
   imageSrc: "/api/app-store/office365video/icon.svg",
   variant: "conferencing",
   logo: "/api/app-store/office365video/icon.svg",
-  publisher: "Cal.com",
+  publisher: "DBee Calendar",
   url: "https://www.microsoft.com/en-ca/microsoft-teams/group-chat-software",
   verified: true,
   rating: 4.3, // TODO: placeholder for now, pull this from TrustPilot or G2
@@ -19,7 +19,7 @@ export const metadata = {
   slug: "msteams",
   title: "MS Teams (Requires work/school account)",
   trending: true,
-  email: "help@cal.com",
+  email: "help@calendar.dbeedata.com",
   locationType: LocationType.Teams,
   locationLabel: "MS Teams",
 } as App;

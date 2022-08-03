@@ -6,7 +6,7 @@
   "type": "dbee_data_calendar",
   "imageSrc": "/api/app-store/dbee_data/icon.svg",
   "logo": "/api/app-store/dbee_data/icon.svg",
-  "url": "https://cal.com/apps/dbee_data",
+  "url": "https://calendar.dbeedata.com/apps/dbee_data",
   "variant": "calendar",
   "categories": ["calendar"],
   "publisher": "DBee Data",

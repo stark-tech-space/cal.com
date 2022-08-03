@@ -6,11 +6,11 @@
   "type": "whereby_video",
   "imageSrc": "/api/app-store/whereby/icon.svg",
   "logo": "/api/app-store/whereby/icon.svg",
-  "url": "https://cal.com/apps/whereby",
+  "url": "https://calendar.dbeedata.com/apps/whereby",
   "variant": "conferencing",
   "categories": ["video"],
-  "publisher": "Cal.com",
-  "email": "help@cal.com",
+  "publisher": "DBee Calendar",
+  "email": "help@calendar.dbeedata.com",
   "description": "Whereby makes it super simple for collaborating teams to jump on a video call.",
   "__createdUsingCli": true
 }

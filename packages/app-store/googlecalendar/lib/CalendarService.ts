@@ -239,7 +239,7 @@ export default class GoogleCalendarService implements Calendar {
         function (err: GoogleCalError | null, event) {
           if (err) {
             /**
-             *  410 is when an event is already deleted on the Google cal before on cal.com
+             *  410 is when an event is already deleted on the Google cal before on calendar.dbeedata.com
              *  404 is when the event is on a different calendar
              */
             if (err.code === 410) return resolve();

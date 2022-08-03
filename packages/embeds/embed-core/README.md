@@ -51,7 +51,7 @@ Make `dist/embed.umd.js` servable on URL <http://cal.com/embed.js>
 
 - Branding
 
-  - Powered by Cal.com and 'Try it for free'. Should they be shown only for FREE account.
+  - Powered by DBee Calendar and 'Try it for free'. Should they be shown only for FREE account.
   - Branding at the bottom has been removed for UI improvements, need to see where to add it.
 
 - API
@@ -113,5 +113,5 @@ Make `dist/embed.umd.js` servable on URL <http://cal.com/embed.js>
 
   - A complete document on how to use embed
 
-- app.cal.com
+- calendar.dbeedata.com
   - Get Embed code for each event-type

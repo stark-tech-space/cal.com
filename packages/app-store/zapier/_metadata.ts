@@ -9,17 +9,17 @@ export const metadata = {
   category: "other",
   imageSrc: "/api/app-store/zapier/icon.svg",
   logo: "/api/app-store/zapier/icon.svg",
-  publisher: "Cal.com",
+  publisher: "DBee Calendar",
   rating: 0,
   reviews: 0,
   slug: "zapier",
   title: "Zapier",
   trending: true,
   type: "zapier_other",
-  url: "https://cal.com/apps/zapier",
+  url: "https://calendar.dbeedata.com/apps/zapier",
   variant: "other",
   verified: true,
-  email: "help@cal.com",
+  email: "help@calendar.dbeedata.com",
 } as App;
 
 export default metadata;

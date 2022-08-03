@@ -1,6 +1,6 @@
 {
   "name": "@calcom/ee",
-  "description": "Cal.com Enterprise Edition features",
+  "description": "DBee Calendar Enterprise Edition features",
   "version": "0.0.0",
   "private": true,
   "license": "AGPLv3",
