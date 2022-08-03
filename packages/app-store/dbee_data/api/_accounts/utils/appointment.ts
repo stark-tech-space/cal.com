@@ -324,6 +324,7 @@ export async function createTreatmentAppointment({
     treatment: {
       id: treatment.id,
       name: treatment.name,
+      duration: Number(treatment.duration)
     },
     start: startISODate,
     end: endISODate,
