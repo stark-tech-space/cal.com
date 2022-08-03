@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import prisma from "@calcom/prisma";
-import { hashAPIKey } from "@calcom/ee/lib/api/apiKeys";
+import { hashAPIKey } from "@calcom/features/ee/api-keys/lib/apiKeys";
+
 import { initDoctorCalSchedule, getRandomString } from "../../utils/index"
 import { Doctor } from '../../types/doctor'
 import { v4 as uuidv4 } from "uuid";
