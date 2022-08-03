@@ -10,16 +10,16 @@
   <p align="center">
     The open-source Calendly alternative.
     <br />
-    <a href="https://cal.com"><strong>Learn more »</strong></a>
+    <a href="https://dbeedata.com"><strong>Learn more »</strong></a>
     <br />
     <br />
-    <a href="https://cal.com/slack">Slack</a>
+    <a href="https://dbeedata.com/slack">Slack</a>
     ·
-    <a href="https://cal.com">Website</a>
+    <a href="https://dbeedata.com">Website</a>
     ·
-    <a href="https://github.com/calcom/cal.com/issues">Issues</a>
+    <a href="https://github.com/starl-tech-space/cal.com/issues">Issues</a>
     ·
-    <a href="https://cal.com/roadmap">Roadmap</a>
+    <a href="https://dbeedata.com/roadmap">Roadmap</a>
   </p>
 </p>
 
