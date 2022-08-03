@@ -122,7 +122,6 @@ export async function updateDoctorCalEventype(availabilities: Record<WeekDay, Ar
       // There is no eventype, you need to create it and bind the eventypeId after creating it
       let name = `${treatment[0].name}_${treatment[0].duration}_${doctorId}`
 
-      console.log('=========', name, treatment[0].isPublic, treatment[0])
       eventType = await prisma.eventType.create({
         data: {
           userId,
@@ -140,6 +139,16 @@ export async function updateDoctorCalEventype(availabilities: Record<WeekDay, Ar
             connect: [{
               id: Number(userId)
             }]
+          }
+        }
+      });
+    } else {
+      // There is exists eventype, need to update it
+      eventType = await prisma.eventType.update({
+        where: { id: Number(eventType.id) },
+        data: {
+          metadata: {
+            isPublic: treatment[0].isPublic ? true : false
           }
         }
       });
