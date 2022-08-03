@@ -272,7 +272,7 @@ const Component = ({
             published by DBee Calendar. If you encounter inappropriate content or behaviour please report it.
           </small>
           <a className="mt-2 block text-xs text-red-500" href="mailto:service@dbeedata.com">
-            <FlagIcon className="inline h-3 w-3" /> Report App
+            <Icon.Flag className="inline h-3 w-3" /> Report App
           </a>
         </div>
       </div>
