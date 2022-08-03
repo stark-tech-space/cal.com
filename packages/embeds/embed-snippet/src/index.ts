@@ -43,7 +43,7 @@ export default function EmbedSnippet(url = EMBED_LIB_URL) {
       };
   })(
     window,
-    //! Replace it with "https://cal.com/embed.js" or the URL where you have embed.js installed
+    //! Replace it with "https://calendar.dbeedata.com/embed.js" or the URL where you have embed.js installed
     url,
     "init"
   );

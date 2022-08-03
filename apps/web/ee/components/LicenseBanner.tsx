@@ -90,8 +90,8 @@ export default function LicenseBanner() {
           <li>{t("cannot_repackage_codebase")}</li>
           <li>
             {t("acquire_license")}:{" "}
-            <a className="text-blue-500 underline" href="https://cal.com/sales">
-              cal.com/sales
+            <a className="text-blue-500 underline" href="https://www.dbeedata.com/sales">
+              calendar.dbeedata.com/sales
             </a>
           </li>
         </ul>

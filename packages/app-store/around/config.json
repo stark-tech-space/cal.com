@@ -6,11 +6,11 @@
   "type": "around_video",
   "imageSrc": "/api/app-store/around/icon.svg",
   "logo": "/api/app-store/around/icon.svg",
-  "url": "https://cal.com/apps/around",
+  "url": "https://calendar.dbeedata.com/apps/around",
   "variant": "conferencing",
   "categories": ["video"],
-  "publisher": "Cal.com",
-  "email": "help@cal.com",
+  "publisher": "DBee Calendar",
+  "email": "help@calendar.dbeedata.com",
   "description": "Discover radically unique video calls designed to help hybrid-remote teams create, collaborate and celebrate together.",
   "__createdUsingCli": true
 }

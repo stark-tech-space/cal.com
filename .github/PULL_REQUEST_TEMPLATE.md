@@ -30,7 +30,7 @@ Fixes # (issue)
 
 <!-- Please remove all the irrelevant bullets to your PR -->
 
-- I haven't read the [contributing guide](https://github.com/calcom/cal.com/blob/main/CONTRIBUTING.md)
+- I haven't read the [contributing guide](https://github.com/calcom/calendar.dbeedata.com/blob/main/CONTRIBUTING.md)
 - My code doesn't follow the style guidelines of this project
 - I haven't performed a self-review of my own code and corrected any misspellings
 - I haven't commented my code, particularly in hard-to-understand areas

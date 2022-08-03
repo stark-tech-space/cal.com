@@ -227,7 +227,7 @@ export const webhookRouter = createProtectedRouter()
         ],
         organizer: {
           name: "Cal",
-          email: "no-reply@cal.com",
+          email: "no-reply@calendar.dbeedata.com",
           timeZone: "Europe/London",
           language,
         },

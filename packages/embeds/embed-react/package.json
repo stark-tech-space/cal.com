@@ -5,14 +5,14 @@
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
     "type": "git",
-    "url": "https://github.com/calcom/cal.com",
+    "url": "https://github.com/calcom/calendar.dbeedata.com",
     "directory": "packages/embeds/embed-react"
   },
   "scripts": {
     "dev": "vite --port=3101 --open",
     "build": "vite build && tsc --emitDeclarationOnly --declarationDir dist",
     "preview": "vite preview",
-    "prepare": "NEXT_PUBLIC_EMBED_LIB_URL='https://app.cal.com/embed/embed.js' NEXT_PUBLIC_WEBAPP_URL='https://app.cal.com'  yarn build",
+    "prepare": "NEXT_PUBLIC_EMBED_LIB_URL='https://calendar.dbeedata.com/embed/embed.js' NEXT_PUBLIC_WEBAPP_URL='https://calendar.dbeedata.com'  yarn build",
     "type-check": "tsc --pretty --noEmit",
     "lint": "eslint --ext .ts,.js,.tsx,.jsx ./src",
     "embed-tests": "yarn playwright test --config=./playwright/config/playwright.config.ts",

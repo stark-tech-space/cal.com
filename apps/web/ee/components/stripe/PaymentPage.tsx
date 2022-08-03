@@ -53,7 +53,7 @@ const PaymentPage: FC<PaymentPageProps> = (props) => {
       <Theme />
       <Head>
         <title>
-          {t("payment")} | {eventName} | Cal.com
+          {t("payment")} | {eventName} | DBee Calendar
         </title>
         <link rel="icon" href="/favicon.ico" />
       </Head>

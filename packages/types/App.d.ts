@@ -44,7 +44,7 @@ export interface App {
   url: string;
   /** Optional documentation website URL */
   docsUrl?: string;
-  /** Wether if the app is verified by Cal.com or not */
+  /** Wether if the app is verified by DBee Calendar or not */
   verified: boolean;
   /** Wether the app should appear in the trending section of the app store */
   trending: boolean;
