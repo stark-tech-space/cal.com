@@ -26,6 +26,7 @@ export type Appointment = {
   treatment: {
     id: string;
     name: string;
+    duration: number;
   };
   start: Date;
   end: Date;
