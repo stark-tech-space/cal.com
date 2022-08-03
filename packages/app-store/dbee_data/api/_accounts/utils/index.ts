@@ -144,12 +144,15 @@ export async function updateDoctorCalEventype(availabilities: Record<WeekDay, Ar
       });
     } else {
       // There is exists eventype, need to update it
+
+      let metadata = eventType.metadata
+
+      metadata.isPublic = treatment[0].isPublic ? true : false
+      
       eventType = await prisma.eventType.update({
         where: { id: Number(eventType.id) },
         data: {
-          metadata: {
-            isPublic: treatment[0].isPublic ? true : false
-          }
+          metadata: metadata
         }
       });
     }
