@@ -197,7 +197,7 @@ const Layout = ({
   return (
     <>
       <HeadSeo
-        title={pageTitle ?? "Cal.com"}
+        title={pageTitle ?? "DBee Calendar"}
         description={props.subtitle ? props.subtitle?.toString() : ""}
         nextSeoProps={{
           nofollow: true,
@@ -299,7 +299,7 @@ const Layout = ({
                   </span>
                 </div>
                 <small style={{ fontSize: "0.5rem" }} className="mx-3 mt-1 mb-2 hidden opacity-50 lg:block">
-                  &copy; {new Date().getFullYear()} Cal.com, Inc. v.{pkg.version + "-"}
+                  &copy; {new Date().getFullYear()} DBee Calendar, Inc. v.{pkg.version + "-"}
                   {process.env.NEXT_PUBLIC_WEBSITE_URL === "https://cal.com" ? "h" : "sh"}
                   <span className="lowercase" data-testid={`plan-${plan?.toLowerCase()}`}>
                     -{plan}

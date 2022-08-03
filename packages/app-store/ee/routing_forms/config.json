@@ -6,11 +6,11 @@
   "type": "routing_forms_other",
   "imageSrc": "/api/app-store/ee/routing_forms/icon.svg",
   "logo": "/api/app-store/ee/routing_forms/icon.svg",
-  "url": "https://cal.com/apps/routing_forms",
+  "url": "https://calendar.dbeedata.com/apps/routing_forms",
   "variant": "other",
   "categories": ["other"],
-  "publisher": "Cal.com",
-  "email": "help@cal.com",
+  "publisher": "DBee Calendar",
+  "email": "help@calendar.dbeedata.com",
   "description": "It would allow a booker to connect with the right person or choose the right event, faster. It would work by taking inputs from the booker and using that data to route to the correct booker/event as configured by Cal user",
   "__createdUsingCli": true
 }

@@ -659,7 +659,7 @@ const EventTypePage = (props: inferSSRProps<typeof getServerSideProps>) => {
                           />
                         </g>
                       </svg>
-                      <span className="text-sm ltr:ml-2 rtl:mr-2">Cal.com Video</span>
+                      <span className="text-sm ltr:ml-2 rtl:mr-2">DBee Calendar Video</span>
                     </div>
                   )}
                   {location.type === LocationType.Zoom && (
@@ -1953,7 +1953,7 @@ const EventTypePage = (props: inferSSRProps<typeof getServerSideProps>) => {
                   className="text-md flex items-center rounded-sm px-2 py-1 text-sm font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900"
                   eventTypeId={eventType.id}
                 />
-                {/* This will only show if the user is not a member (ADMIN,OWNER) and if there is no current membership 
+                {/* This will only show if the user is not a member (ADMIN,OWNER) and if there is no current membership
                       - meaning you are within an eventtype that does not belong to a team */}
                 {(props.currentUserMembership?.role !== "MEMBER" || !props.currentUserMembership) && (
                   <Dialog>

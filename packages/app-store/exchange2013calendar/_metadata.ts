@@ -13,14 +13,14 @@ export const metadata = {
   category: "calendar",
   label: "Exchange Calendar",
   logo: "/api/app-store/exchange2013calendar/icon.svg",
-  publisher: "Cal.com",
+  publisher: "DBee Calendar",
   rating: 5,
   reviews: 69,
   slug: "exchange2013-calendar",
   trending: false,
-  url: "https://cal.com/",
+  url: "https://calendar.dbeedata.com/",
   verified: true,
-  email: "help@cal.com",
+  email: "help@calendar.dbeedata.com",
 } as App;
 
 export default metadata;

@@ -4,12 +4,12 @@ info:
   description: The open source Calendly alternative.
   contact:
     name: Support
-    email: support@cal.com
+    email: service@dbeedata.com
   license:
     name: MIT License
     url: "https://opensource.org/licenses/MIT"
   version: 1.0.0
-  termsOfService: "https://cal.com/terms"
+  termsOfService: "https://www.dbeedata.com/terms"
 server:
   url: "http://localhost:{port}"
   description: Local Development Server
@@ -205,7 +205,7 @@ paths:
                       integration: google_calendar
                       name: Birthdays
                     - selected: true
-                      externalId: bailey@cal.com
+                      externalId: bob@dbeedata.com
                       integration: google_calendar
                       name: Calendso
                       primary: true
@@ -214,9 +214,9 @@ paths:
                       integration: google_calendar
                       name: Personal
                     - selected: false
-                      externalId: connor@cal.com
+                      externalId: connor@dbeedata.com
                       integration: google_calendar
-                      name: connor@cal.com
+                      name: connor@dbeedata.com
                     - selected: false
                       externalId: c_feunmui1m8el5o1oo885fu48k8@group.calendar.google.com
                       integration: google_calendar
@@ -1068,7 +1068,7 @@ paths:
         required: true
         description: The team which you wish to list members of
 servers:
-  - url: "https://app.cal.com"
+  - url: "https://calendar.dbeedata.com"
     description: Production
 components:
   securitySchemes: {}

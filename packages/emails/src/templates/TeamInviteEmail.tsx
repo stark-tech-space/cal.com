@@ -29,7 +29,7 @@ export const TeamInviteEmail = (props: TeamInvite & Partial<React.ComponentProps
         <p style={{ fontWeight: 400, lineHeight: "24px" }}>
           <>
             {props.language("have_any_questions")}{" "}
-            <a href="mailto:support@cal.com" style={{ color: "#3E3E3E" }} target="_blank" rel="noreferrer">
+            <a href="mailto:support@calendar.dbeedata.com" style={{ color: "#3E3E3E" }} target="_blank" rel="noreferrer">
               <>{props.language("contact_our_support_team")}</>
             </a>
           </>

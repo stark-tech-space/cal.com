@@ -7,14 +7,14 @@
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
     "type": "git",
-    "url": "https://github.com/calcom/cal.com",
+    "url": "https://github.com/calcom/calendar.dbeedata.com",
     "directory": "packages/embeds/embed-snippet"
   },
   "scripts": {
     "build": "vite build && tsc --emitDeclarationOnly --declarationDir dist",
     "type-check": "tsc --pretty --noEmit",
     "lint": "eslint --ext .ts,.js src",
-    "prepare": "NEXT_PUBLIC_EMBED_LIB_URL='https://app.cal.com/embed/embed.js' NEXT_PUBLIC_WEBAPP_URL='https://app.cal.com' yarn build",
+    "prepare": "NEXT_PUBLIC_EMBED_LIB_URL='https://calendar.dbeedata.com/embed/embed.js' NEXT_PUBLIC_WEBAPP_URL='https://calendar.dbeedata.com' yarn build",
     "publish-prod:patch": "yarn publish --access public --patch",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },

@@ -225,7 +225,7 @@ export const useIsEmbed = () => {
     const _isValidNamespace = isValidNamespace(namespace);
     if (parent !== window && !_isValidNamespace) {
       log(
-        "Looks like you have iframed cal.com but not using Embed Snippet. Directly using an iframe isn't recommended."
+        "Looks like you have iframed calendar.dbeedata.com but not using Embed Snippet. Directly using an iframe isn't recommended."
       );
     }
     setIsEmbed(window.isEmbed());

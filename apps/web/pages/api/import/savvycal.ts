@@ -25,7 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     },
   });
   if (req.method === "POST") {
-    const userResult = await fetch("https://api.savvycal.com/v1/me", {
+    const userResult = await fetch("https://api.savvycalendar.dbeedata.com/v1/me", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -48,7 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       });
 
-      const eventTypesResult = await fetch("https://api.savvycal.com/v1/links?limit=100", {
+      const eventTypesResult = await fetch("https://api.savvycalendar.dbeedata.com/v1/links?limit=100", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

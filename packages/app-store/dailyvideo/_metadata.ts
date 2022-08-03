@@ -13,7 +13,7 @@ export const metadata = {
   url: "https://daily.co",
   trending: true,
   logo: "/api/app-store/dailyvideo/icon.svg",
-  publisher: "Cal.com",
+  publisher: "DBee Calendar",
   verified: true,
   rating: 4.3, // TODO: placeholder for now, pull this from TrustPilot or G2
   reviews: 69, // TODO: placeholder for now, pull this from TrustPilot or G2
@@ -21,7 +21,7 @@ export const metadata = {
   slug: "daily-video",
   title: "Cal Video",
   isGlobal: true,
-  email: "help@cal.com",
+  email: "help@calendar.dbeedata.com",
   locationType: LocationType.Daily,
   locationLabel: "Cal Video",
   key: { apikey: process.env.DAILY_API_KEY },

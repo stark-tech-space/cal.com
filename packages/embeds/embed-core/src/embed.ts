@@ -426,7 +426,7 @@ export class Cal {
       this.iframeDoQueue.push({ method, arg });
       return;
     }
-    // TODO: Ensure that origin is as defined by user. Generally it would be cal.com but in case of self hosting it can be anything.
+    // TODO: Ensure that origin is as defined by user. Generally it would be calendar.dbeedata.com but in case of self hosting it can be anything.
     this.iframe!.contentWindow!.postMessage({ originator: "CAL", method, arg }, "*");
   }
 

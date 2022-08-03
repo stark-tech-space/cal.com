@@ -21,7 +21,7 @@ export default class AttendeeRequestRescheduledEmail extends OrganizerScheduledE
         filename: "event.ics",
         content: this.getiCalEventAsString(),
       },
-      from: `Cal.com <${this.getMailerOptions().from}>`,
+      from: `DBee Calendar <${this.getMailerOptions().from}>`,
       to: toAddresses.join(","),
       subject: `${this.t("requested_to_reschedule_subject_attendee", {
         eventType: this.calEvent.type,

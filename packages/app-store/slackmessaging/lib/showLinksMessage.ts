@@ -41,7 +41,7 @@ export default async function showLinksMessage(req: NextApiRequest, res: NextApi
 
   slackClient.chat.postMessage({
     channel: body.channel_id,
-    text: `${data.user?.username}'s Cal.com Links`,
+    text: `${data.user?.username}'s DBee Calendar Links`,
     blocks,
   });
 

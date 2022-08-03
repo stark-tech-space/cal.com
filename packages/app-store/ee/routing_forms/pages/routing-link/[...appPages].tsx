@@ -96,7 +96,7 @@ function RoutingForm({ form }: inferSSRProps<typeof getServerSideProps>) {
   return !customPageMessage ? (
     <>
       <Head>
-        <title>{form.name} | Cal.com Forms</title>
+        <title>{form.name} | DBee Calendar Forms</title>
       </Head>
       <div className="mx-auto my-0 max-w-3xl md:my-24">
         <div className="w-full max-w-4xl ltr:mr-2 rtl:ml-2">

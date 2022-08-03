@@ -10,7 +10,7 @@ export const metadata = {
   imageSrc: "/api/app-store/hubspotothercalendar/icon.svg",
   variant: "other_calendar",
   logo: "/api/app-store/hubspotothercalendar/icon.svg",
-  publisher: "Cal.com",
+  publisher: "DBee Calendar",
   url: "https://hubspot.com/",
   verified: true,
   rating: 4.3, // TODO: placeholder for now, pull this from TrustPilot or G2
@@ -20,7 +20,7 @@ export const metadata = {
   slug: "hubspot",
   title: "HubSpot CRM",
   trending: true,
-  email: "help@cal.com",
+  email: "help@calendar.dbeedata.com",
 } as App;
 
 export default metadata;
