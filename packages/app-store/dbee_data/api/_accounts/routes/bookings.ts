@@ -34,6 +34,8 @@ router.patch('/status', async (req: Request, res: Response) => {
       await appointmentRef.update({
         status: req.body.status
       });
+    } else {
+      //TODO: create appointment
     }
   } catch (error) {
     res.status(500).send('internal error');
