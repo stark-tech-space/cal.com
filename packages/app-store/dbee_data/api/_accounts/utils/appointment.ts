@@ -164,7 +164,7 @@ const checkFormFields = ({
   });
 };
 
-const generateSeatNumber = async ({
+const generateSeatNumber = ({
   accountId,
   groupId,
   dateString,

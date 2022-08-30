@@ -97,9 +97,10 @@ router.get(`/treatments`, async (req: Request, res: Response) => {
   res.json(eventTypes == null ? [] : eventTypes);
 })
 
-//TODO: needs a name string 
+//TODO: needs a name string
 router.put('/schedule', useSecret, async (req: Request, res: Response) => {
   const data: Record<WeekDay, Array<Availability>> = req.body.weekly;
+  const bookingStartMinsModulus = req.body.bookingStartMinsModulus;
 
   const { accountId, doctorId } = res.locals
 
@@ -113,6 +114,15 @@ router.put('/schedule', useSecret, async (req: Request, res: Response) => {
   })
 
   await initDoctorCalSchedule(data, user.id, accountId, doctorId)
+
+  await prisma.user.update({
+    where: {
+      id: user.id
+    },
+    data: {
+      bufferTime: bookingStartMinsModulus
+    }
+  });
 
   res.status(200).json({ success: true })
 })
@@ -190,7 +200,7 @@ router.post(`/bookings`, async (req: Request, res: Response) => {
 
 router.get(`/schedule`, async (req: Request, res: Response) => {
 
-  const { eventTypeId, start, end, duration} = req.query;
+  const { eventTypeId, start, end, duration, bookingStartMinsModulus } = req.query;
   const { doctorId, accountId } = res.locals
 
   const schedule = await prisma.eventType.findUnique({ where: { id: Number(eventTypeId) } }).schedule().availability()
@@ -247,7 +257,7 @@ router.delete('/user', async (req: Request, res: Response) => {
   res.json({ success: 1 })
 })
 
-// creat booking webhook
+// create booking webhook
 router.post('/bookingsHook', async (req: Request, res: Response) => {
 
   const { triggerEvent, createdAt, payload } = req.body as BookingPayload;
@@ -281,6 +291,8 @@ router.post('/bookingsHook', async (req: Request, res: Response) => {
         if (!metadata.treatmentId) {
           return res.status(400).json({ message: "No need to synchronize data" });
         }
+
+        //TODO: find patient or create patient in dbee
 
         let appointmentId = '';
         appointmentId = await createTreatmentAppointment({
